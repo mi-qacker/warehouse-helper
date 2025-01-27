@@ -15,7 +15,8 @@ module.exports = {
       ref: 'origin/main',
       repo: 'git@github.com:mi-qacker/warehouse-helper.git',
       path: '/var/www/warehouse-helper-frontend',
-      'post-deploy': 'npm install',
+      'pre-deploy': 'npm ci',
+      'post-deploy': 'pm2 startOrRestart --env production',
     },
   },
 };
