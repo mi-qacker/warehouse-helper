@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('dotenv').config();
+
 module.exports = {
   apps: [
     {
@@ -7,12 +10,11 @@ module.exports = {
   ],
   deploy: {
     production: {
-      user: 'matveykalinin2001',
-      host: '62.84.114.252',
+      user: process.env.PRODUCTION_USER,
+      host: process.env.PRODUCTION_HOST,
       ref: 'origin/main',
       repo: 'git@github.com:mi-qacker/warehouse-helper.git',
       path: '/var/www/warehouse-helper-frontend',
-      "pre-deploy" : "nvm --version",
       'post-deploy': 'npm install',
     },
   },
