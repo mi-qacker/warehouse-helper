@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "prestart": "next build",
     "start": "next start",
     "test": "vitest",
     "test:playwright": "playwright test",
