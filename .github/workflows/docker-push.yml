@@ -3,9 +3,10 @@ name: Publish Docker image in testing
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
+
+env:
+  TAG: testing
 
 jobs:
   push_to_registry:
@@ -15,6 +16,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
       - name: Log in to Yandex Container Registry
+        id: auth
         uses: docker/login-action@v3
         with:
           registry: cr.yandex
@@ -28,4 +30,4 @@ jobs:
           file: ./Dockerfile
           push: true
           platforms: linux/amd64
-          tags: cr.yandex/crptg8lgsjvtjbk5oufk/warehouse-helper-nextjs:testing
+          tags: ${{vars.DOCKER_NAME }}:${{ env.TAG }}
