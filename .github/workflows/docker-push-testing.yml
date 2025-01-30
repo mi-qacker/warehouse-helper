@@ -1,0 +1,27 @@
+name: Publish Docker image in testing
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Yandex Container Registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: cr.yandex/crptg8lgsjvtjbk5oufk/warehouse-helper-nextjs:debug
