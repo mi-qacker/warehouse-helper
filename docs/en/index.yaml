@@ -1,0 +1,12 @@
+title: Template Documentation
+description: Template Documentation - write the documentation for your users
+meta:
+  title: Metadata
+  noIndex: true
+links:
+- title: Help
+  description: Description of all the options for contacting us
+  href: help.md
+- title: Rules
+  description: Description of the platform, its main capabilities, features and advantages.
+  href: rules.md
