@@ -5,25 +5,25 @@ analytics:
   text: 'Мы используем файлы cookie, чтобы вы могли наилучшим образом пользоваться нашим веб-сайтом. Если вы продолжаете использовать наш веб-сайт, мы полагаем, что вы согласны с таким использованием.'
   buttons:
     accept:
-      text: "Ок"
-      theme: "accent"
-      size: "xl"
+      text: 'Ок'
+      theme: 'accent'
+      size: 'xl'
 
 navigation:
   logo:
-    url: "https://github.ru/"
+    url: 'https://github.ru/'
     dark:
-      icon: "https://storage.yandexcloud.net/diplodoc-www-assets/logo/ddos-logo-dark.svg"
+      icon: 'https://storage.yandexcloud.net/diplodoc-www-assets/logo/ddos-logo-dark.svg'
     light:
-      icon: "https://storage.yandexcloud.net/diplodoc-www-assets/navigation/diplodoc-logo.svg"
+      icon: 'https://storage.yandexcloud.net/diplodoc-www-assets/navigation/diplodoc-logo.svg'
   header:
     leftItems:
-      - text: "Оглавление"
-        type: "link"
-        url: "../ru"
-      - text: "Помощь"
-        type: "link"
-        url: "./help"
+      - text: 'Оглавление'
+        type: 'link'
+        url: '../ru'
+      - text: 'Помощь'
+        type: 'link'
+        url: './help'
     rightItems:
       - type: 'controls'
 

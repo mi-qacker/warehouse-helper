@@ -2,4 +2,4 @@
 
 We will help you solve your issues.
 
-* [Telegram](https://t.me/diplodoc_ru)
+- [Telegram](https://t.me/diplodoc_ru)
