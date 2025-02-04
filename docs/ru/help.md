@@ -2,4 +2,4 @@
 
 Мы поможем вам, и решим ваши проблемы
 
-- [Telegram](https://t.me/diplodoc_ru)
+- [DELETED]

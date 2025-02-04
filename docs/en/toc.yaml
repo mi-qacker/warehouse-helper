@@ -1,8 +1,0 @@
-title: Template Documentation
-href: index.yaml
-
-items:
-  - name: Help
-    href: help.md
-  - name: Rules
-    href: rules.md
