@@ -1,4 +1,4 @@
 allowHTML: true
 lang: 'ru'
-langs: ['en', 'ru']
+langs: ['ru']
 output-format: 'html'
