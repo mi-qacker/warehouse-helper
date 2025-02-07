@@ -9,7 +9,9 @@ jobs:
   push_to_registry:
     name: Push Docker image to Yandex Container Registry
     runs-on: ubuntu-latest
-    environment: testing
+    environment:
+      name: testing
+      url: ${{vars.URL}}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
