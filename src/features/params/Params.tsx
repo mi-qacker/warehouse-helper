@@ -1,7 +1,7 @@
 'use client';
 
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from '@headlessui/react';
-import {JSX} from 'react';
+import {JSX, useMemo} from 'react';
 import {CargoParams} from './CargoParams';
 import {ShelvingParams} from './ShelvingParams';
 import {WarehouseParams} from './WarehouseParams';
@@ -13,11 +13,14 @@ type ParamCategory = {
 };
 
 export function Params() {
-  const paramCategories: ParamCategory[] = [
-    {key: 'warehouse', label: 'Склад', content: <WarehouseParams />},
-    {key: 'shelving', label: 'Стеллажи', content: <ShelvingParams />},
-    {key: 'cargo', label: 'Груз', content: <CargoParams />},
-  ];
+  const paramCategories = useMemo<ParamCategory[]>(
+    () => [
+      {key: 'warehouse', label: 'Склад', content: <WarehouseParams />},
+      {key: 'shelving', label: 'Стеллажи', content: <ShelvingParams />},
+      {key: 'cargo', label: 'Груз', content: <CargoParams />},
+    ],
+    []
+  );
 
   return (
     <div className="h-full rounded-r-md bg-neutral-100 p-4 shadow-md">
