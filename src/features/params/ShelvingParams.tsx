@@ -47,12 +47,12 @@ export function ShelvingParams() {
   }, []);
 
   const getFormValues = useCallback((): NewShelfParams => {
-    const x = Number(xInputRef.current?.value || 0);
-    const y = Number(yInputRef.current?.value || 0);
-    const width = Number(widthInputRef.current?.value || 0);
-    const length = Number(lengthInputRef.current?.value || 0);
-    const height = Number(heightInputRef.current?.value || 0);
-    const levels = Number(levelsInputRef.current?.value || 0);
+    const x = Number(xInputRef.current?.value ?? 0);
+    const y = Number(yInputRef.current?.value ?? 0);
+    const width = Number(widthInputRef.current?.value ?? 0);
+    const length = Number(lengthInputRef.current?.value ?? 0);
+    const height = Number(heightInputRef.current?.value ?? 0);
+    const levels = Number(levelsInputRef.current?.value ?? 0);
 
     return {x, y, width, length, height, levels};
   }, []);
@@ -92,12 +92,14 @@ export function ShelvingParams() {
 
         <div className="grid grid-cols-2 gap-2">
           <Input
+            tabIndex={1}
             label="X координата (м)"
             type="number"
             name="x"
             ref={xInputRef}
           />
           <Input
+            tabIndex={2}
             label="Y координата (м)"
             type="number"
             name="y"
@@ -107,18 +109,21 @@ export function ShelvingParams() {
 
         <div className="grid grid-cols-3 gap-2">
           <Input
+            tabIndex={3}
             label="Ширина (м)"
             type="number"
             name="width"
             ref={widthInputRef}
           />
           <Input
+            tabIndex={4}
             label="Длина (м)"
             type="number"
             name="length"
             ref={lengthInputRef}
           />
           <Input
+            tabIndex={5}
             label="Высота (м)"
             type="number"
             name="height"
@@ -127,6 +132,7 @@ export function ShelvingParams() {
         </div>
 
         <Input
+          tabIndex={6}
           label="Количество уровней"
           type="number"
           name="levels"
@@ -165,7 +171,7 @@ export function ShelvingParams() {
                     Координаты: ({shelf.x}, {shelf.y})
                   </span>
                   <span>
-                    Размеры: {shelf.width}×{shelf.length}×{shelf.height} м
+                    Размеры: {shelf.width}:{shelf.length}:{shelf.height} м
                   </span>
                   <span>Уровней: {shelf.levels}</span>
                 </div>

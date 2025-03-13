@@ -39,10 +39,10 @@ export function CargoParams() {
   }, []);
 
   const getFormValues = useCallback((): NewCargoParams => {
-    const width = Number(widthInputRef.current?.value || 0);
-    const length = Number(lengthInputRef.current?.value || 0);
-    const height = Number(heightInputRef.current?.value || 0);
-    const weight = Number(weightInputRef.current?.value || 0);
+    const width = Number(widthInputRef.current?.value ?? 0);
+    const length = Number(lengthInputRef.current?.value ?? 0);
+    const height = Number(heightInputRef.current?.value ?? 0);
+    const weight = Number(weightInputRef.current?.value ?? 0);
 
     return {width, length, height, weight};
   }, []);
@@ -82,18 +82,21 @@ export function CargoParams() {
 
         <div className="grid grid-cols-3 gap-2">
           <Input
+            tabIndex={1}
             label="Ширина (м)"
             type="number"
             name="width"
             ref={widthInputRef}
           />
           <Input
+            tabIndex={2}
             label="Длина (м)"
             type="number"
             name="length"
             ref={lengthInputRef}
           />
           <Input
+            tabIndex={3}
             label="Высота (м)"
             type="number"
             name="height"
@@ -102,6 +105,7 @@ export function CargoParams() {
         </div>
 
         <Input
+          tabIndex={4}
           label="Вес (кг)"
           type="number"
           name="weight"

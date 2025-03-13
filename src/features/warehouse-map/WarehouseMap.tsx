@@ -8,6 +8,7 @@ export function WarehouseMap() {
     useShallow(state => ({
       warehouse: state.warehouse,
       shelving: state.shelving,
+      cargo: state.cargo,
     }))
   );
 
@@ -15,6 +16,7 @@ export function WarehouseMap() {
     <>
       <div>warehouse: {JSON.stringify(params.warehouse, null, 2)}</div>
       <div>shelving: {JSON.stringify(params.shelving, null, 2)}</div>
+      <div>cargo: {JSON.stringify(params.cargo, null, 2)}</div>
     </>
   );
 }

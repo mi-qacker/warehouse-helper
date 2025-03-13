@@ -21,22 +21,26 @@ export function WarehouseParams() {
 
   return (
     <div className="flex flex-col gap-2 py-4">
-      <Input
-        label="Ширина (в метрах)"
-        defaultValue={params.width}
-        name="width"
-        type="number"
-        ref={widthInputRef}
-      />
-      <Input
-        label="Длина (в метрах)"
-        defaultValue={params.length}
-        name="length"
-        type="number"
-        ref={lengthInputRef}
-      />
+      <div className="flex flex-row gap-2">
+        <Input
+          tabIndex={1}
+          label="Ширина (в метрах)"
+          defaultValue={params.width}
+          name="width"
+          type="number"
+          ref={widthInputRef}
+        />
+        <Input
+          tabIndex={2}
+          label="Длина (в метрах)"
+          defaultValue={params.length}
+          name="length"
+          type="number"
+          ref={lengthInputRef}
+        />
+      </div>
 
-      <Button onClick={onClickUpdateButton} label="Update" />
+      <Button onClick={onClickUpdateButton} label="Обновить" />
     </div>
   );
 }
