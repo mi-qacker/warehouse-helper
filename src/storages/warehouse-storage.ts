@@ -1,77 +1,42 @@
 import {create} from 'zustand';
+import {createJSONStorage, persist} from 'zustand/middleware';
+import {WarehouseStore} from './types';
 
-export type WarehouseParams = {width: number; length: number};
-export type ShelfParams = {
-  x: number;
-  y: number;
-  width: number;
-  length: number;
-  height: number;
-  levels: number;
-  id: string;
-};
-export type NewShelfParams = Omit<ShelfParams, 'id'>;
+export const useWarehouseStore = create<WarehouseStore>()(
+  persist(
+    (set, get) => ({
+      warehouse: {width: 16, length: 16},
+      updateWarehouse: newParams => set({warehouse: newParams}),
 
-export type CargoParams = {
-  width: number;
-  length: number;
-  height: number;
-  weight: number;
-  id: string;
-};
-export type NewCargoParams = Omit<CargoParams, 'id'>;
+      shelving: [],
+      addShelf: newShelf =>
+        set({
+          shelving: [...get().shelving, {...newShelf, id: crypto.randomUUID()}],
+        }),
+      updateShelf: (id, updatedShelf) =>
+        set({
+          shelving: get().shelving.map(shelf =>
+            shelf.id === id ? {...updatedShelf, id} : shelf
+          ),
+        }),
+      removeShelf: id =>
+        set({shelving: get().shelving.filter(shelf => shelf.id !== id)}),
 
-export type WarehouseStore = {
-  warehouse: WarehouseParams;
-  updateWarehouse: (newParams: WarehouseParams) => void;
-
-  shelving: ShelfParams[];
-  addShelf: (shelf: NewShelfParams) => void;
-  updateShelf: (id: string, shelf: NewShelfParams) => void;
-  removeShelf: (id: string) => void;
-
-  cargo: CargoParams[];
-  addCargo: (cargo: NewCargoParams) => void;
-  updateCargo: (id: string, cargo: NewCargoParams) => void;
-  removeCargo: (id: string) => void;
-};
-
-export const useWarehouseStore = create<WarehouseStore>(set => ({
-  warehouse: {
-    width: 16,
-    length: 16,
-  },
-  updateWarehouse: newParams => set({warehouse: newParams}),
-
-  shelving: [],
-  addShelf: newShelf =>
-    set(state => ({
-      shelving: [...state.shelving, {...newShelf, id: crypto.randomUUID()}],
-    })),
-  updateShelf: (id, updatedShelf) =>
-    set(state => ({
-      shelving: state.shelving.map(shelf =>
-        shelf.id === id ? {...updatedShelf, id} : shelf
-      ),
-    })),
-  removeShelf: id =>
-    set(state => ({
-      shelving: state.shelving.filter(shelf => shelf.id !== id),
-    })),
-
-  cargo: [],
-  addCargo: newCargo =>
-    set(state => ({
-      cargo: [...state.cargo, {...newCargo, id: crypto.randomUUID()}],
-    })),
-  updateCargo: (id, updatedCargo) =>
-    set(state => ({
-      cargo: state.cargo.map(cargo =>
-        cargo.id === id ? {...updatedCargo, id} : cargo
-      ),
-    })),
-  removeCargo: id =>
-    set(state => ({
-      cargo: state.cargo.filter(cargo => cargo.id !== id),
-    })),
-}));
+      cargo: [],
+      addCargo: newCargo =>
+        set({cargo: [...get().cargo, {...newCargo, id: crypto.randomUUID()}]}),
+      updateCargo: (id, updatedCargo) =>
+        set({
+          cargo: get().cargo.map(cargo =>
+            cargo.id === id ? {...updatedCargo, id} : cargo
+          ),
+        }),
+      removeCargo: id =>
+        set({cargo: get().cargo.filter(cargo => cargo.id !== id)}),
+    }),
+    {
+      name: 'warehouse-params',
+      storage: createJSONStorage(() => sessionStorage),
+    }
+  )
+);

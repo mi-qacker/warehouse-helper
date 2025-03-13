@@ -1,4 +1,5 @@
-import {NewShelfParams, useWarehouseStore} from '@/storages/warehouse-storage';
+import {NewShelfParams} from '@/storages/types';
+import {useWarehouseStore} from '@/storages/warehouse-storage';
 import {Button} from '@/ui/Button';
 import {Input} from '@/ui/Input';
 import {useCallback, useEffect, useRef, useState} from 'react';
