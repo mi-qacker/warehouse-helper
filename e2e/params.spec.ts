@@ -19,20 +19,20 @@ test.describe('Params Component', () => {
 
     await tabs.nth(1).click();
     await expect(panels.nth(1)).toBeVisible();
-    
+
     await tabs.nth(2).click();
     await expect(panels.nth(2)).toBeVisible();
-    
+
     await tabs.nth(0).click();
     await expect(panels.nth(0)).toBeVisible();
   });
 
   test('should update URL when tab changes', async ({page}) => {
     const tabs = page.locator('[role="tab"]');
-    
+
     await tabs.nth(1).click();
     await expect(page).toHaveURL(/tabIndex=1/);
-    
+
     await tabs.nth(2).click();
     await expect(page).toHaveURL(/tabIndex=2/);
   });
