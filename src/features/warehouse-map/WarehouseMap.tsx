@@ -4,19 +4,45 @@ import {useWarehouseStore} from '@/storages/warehouse-storage';
 import {useShallow} from 'zustand/shallow';
 
 export function WarehouseMap() {
-  const params = useWarehouseStore(
+  const {warehouse, shelving} = useWarehouseStore(
     useShallow(state => ({
       warehouse: state.warehouse,
       shelving: state.shelving,
-      cargo: state.cargo,
     }))
   );
 
   return (
-    <>
-      <div>warehouse: {JSON.stringify(params.warehouse, null, 2)}</div>
-      <div>shelving: {JSON.stringify(params.shelving, null, 2)}</div>
-      <div>cargo: {JSON.stringify(params.cargo, null, 2)}</div>
-    </>
+    <div className="p-4">
+      <svg
+        viewBox={`0 0 ${warehouse.width} ${warehouse.length}`}
+        preserveAspectRatio="xMidYMid meet"
+        width="100%"
+        height="100%"
+      >
+        <rect
+          key="warehouse"
+          x={0}
+          y={0}
+          width={warehouse.width}
+          height={warehouse.length}
+          fillOpacity={0}
+          stroke="#000000"
+          strokeWidth={0.1}
+        />
+
+        {shelving.map(shelf => (
+          <rect
+            key={shelf.id}
+            x={shelf.x}
+            y={shelf.y}
+            width={shelf.width}
+            height={shelf.length}
+            fill="#4f46e5"
+            stroke="#3730a3"
+            strokeWidth={0.1}
+          />
+        ))}
+      </svg>
+    </div>
   );
 }
