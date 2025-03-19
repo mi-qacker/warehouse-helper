@@ -12,7 +12,7 @@ export function WarehouseMap() {
   );
 
   return (
-    <div className="p-4">
+    <div className="overflow-hidden p-4">
       <svg
         viewBox={`0 0 ${warehouse.width} ${warehouse.length}`}
         preserveAspectRatio="xMidYMid meet"
