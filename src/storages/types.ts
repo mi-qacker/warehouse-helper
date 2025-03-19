@@ -16,6 +16,8 @@ export type CargoParams = {
   height: number;
   weight: number;
   id: string;
+  shelfId: string | null;
+  level: number | null;
 };
 export type NewCargoParams = Omit<CargoParams, 'id'>;
 
