@@ -36,7 +36,7 @@ export const useWarehouseStore = create<WarehouseStore>()(
     }),
     {
       name: 'warehouse-params',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
