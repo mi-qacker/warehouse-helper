@@ -24,11 +24,21 @@ export const useWarehouseStore = create<WarehouseStore>()(
 
       cargo: [],
       addCargo: newCargo =>
-        set({cargo: [...get().cargo, {...newCargo, id: crypto.randomUUID()}]}),
+        set({cargo: [...get().cargo, {
+          ...newCargo, 
+          id: crypto.randomUUID(),
+          shelfId: newCargo.shelfId ?? null,
+          level: newCargo.level ?? null
+        }]}),
       updateCargo: (id, updatedCargo) =>
         set({
           cargo: get().cargo.map(cargo =>
-            cargo.id === id ? {...updatedCargo, id} : cargo
+            cargo.id === id ? {
+              ...updatedCargo, 
+              id,
+              shelfId: updatedCargo.shelfId ?? null,
+              level: updatedCargo.level ?? null
+            } : cargo
           ),
         }),
       removeCargo: id =>
