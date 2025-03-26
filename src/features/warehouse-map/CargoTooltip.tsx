@@ -11,7 +11,7 @@ export function CargoTooltip(props: {
 }) {
   const {cargo} = props;
   const shelving = useWarehouseStore(state => state.shelving);
-  
+
   const shelf = useMemo(() => {
     if (!cargo.shelfId) return null;
     return shelving.find(s => s.id === cargo.shelfId) || null;
@@ -41,7 +41,7 @@ export function CargoTooltip(props: {
         </div>
         <div>Вес:</div>
         <div>{cargo.weight} кг</div>
-        
+
         {shelf && (
           <>
             <div className="col-span-2 mt-1 font-medium text-indigo-600">
@@ -59,7 +59,7 @@ export function CargoTooltip(props: {
             <div>{(shelf.height / shelf.levels).toFixed(2)} м</div>
           </>
         )}
-        
+
         {!shelf && (
           <div className="col-span-2 mt-1 text-amber-600">
             Не размещен на стеллаже

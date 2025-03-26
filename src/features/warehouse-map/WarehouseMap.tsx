@@ -28,7 +28,7 @@ export function WarehouseMap() {
   // Группировка грузов по стеллажам
   const cargoByShelf = useMemo(() => {
     const result = new Map<string, CargoParams[]>();
-    
+
     cargo.forEach(item => {
       if (item.shelfId) {
         if (!result.has(item.shelfId)) {
@@ -37,7 +37,7 @@ export function WarehouseMap() {
         result.get(item.shelfId)?.push(item);
       }
     });
-    
+
     return result;
   }, [cargo]);
 
@@ -108,12 +108,12 @@ export function WarehouseMap() {
               y={shelf.y}
               width={shelf.width}
               height={shelf.length}
-              fill={cargoByShelf.has(shelf.id) ? "#6366f1" : "#4f46e5"}
+              fill={cargoByShelf.has(shelf.id) ? '#6366f1' : '#4f46e5'}
               stroke="#3730a3"
               strokeWidth={0.1}
               className="transition-opacity hover:opacity-80"
             />
-            
+
             {/* Отображение количества грузов на стеллаже */}
             {cargoByShelf.has(shelf.id) && (
               <text
@@ -139,7 +139,7 @@ export function WarehouseMap() {
             const col = index % 5;
             const x = 1 + col * 3;
             const y = warehouse.length - 1 - item.length - row * 3;
-            
+
             return (
               <rect
                 key={item.id}
@@ -150,7 +150,7 @@ export function WarehouseMap() {
                 fill="#ef4444"
                 stroke="#b91c1c"
                 strokeWidth={0.1}
-                className="transition-opacity hover:opacity-80 cursor-pointer"
+                className="cursor-pointer transition-opacity hover:opacity-80"
                 onMouseMove={e => handleCargoMouseMove(e, item)}
                 onMouseLeave={() => setActiveCargoId(null)}
               />
@@ -161,7 +161,7 @@ export function WarehouseMap() {
       {activeShelf && !activeCargo && (
         <ShelfTooltip shelf={activeShelf} pixelCoordinates={tooltipPos} />
       )}
-      
+
       {activeCargo && (
         <CargoTooltip cargo={activeCargo} pixelCoordinates={tooltipPos} />
       )}

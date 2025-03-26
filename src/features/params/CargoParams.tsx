@@ -120,7 +120,7 @@ export function CargoParams() {
         heightInputRef.current.value = selectedCargo.height.toString();
       if (weightInputRef.current)
         weightInputRef.current.value = selectedCargo.weight.toString();
-      
+
       setSelectedShelfId(selectedCargo.shelfId);
       setSelectedLevel(selectedCargo.level);
     } else {
@@ -251,7 +251,8 @@ export function CargoParams() {
               <option value="">Не выбран</option>
               {Array.from({length: maxLevels}, (_, i) => (
                 <option key={i} value={i.toString()}>
-                  Уровень {i + 1} (высота {(selectedShelf.height / maxLevels).toFixed(2)} м)
+                  Уровень {i + 1} (высота{' '}
+                  {(selectedShelf.height / maxLevels).toFixed(2)} м)
                 </option>
               ))}
             </Select>
@@ -265,8 +266,8 @@ export function CargoParams() {
               validationMessage.includes('превышает')
                 ? 'bg-red-100 text-red-800'
                 : validationMessage.includes('при повороте')
-                ? 'bg-yellow-100 text-yellow-800'
-                : 'bg-green-100 text-green-800'
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'bg-green-100 text-green-800'
             }`}
           >
             {validationMessage}

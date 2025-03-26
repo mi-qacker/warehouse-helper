@@ -12,7 +12,7 @@ export function ShelfTooltip(props: {
 }) {
   const {shelf} = props;
   const cargo = useWarehouseStore(state => state.cargo);
-  
+
   // Фильтрация грузов на этом стеллаже
   const cargoOnShelf = useMemo(() => {
     return cargo.filter(item => item.shelfId === shelf.id);
@@ -49,7 +49,7 @@ export function ShelfTooltip(props: {
           {shelf.levels} ({(shelf.height / shelf.levels).toFixed(2)} м)
         </div>
       </div>
-      
+
       {cargoOnShelf.length > 0 && (
         <>
           <div className="mt-2 font-medium">Грузы на стеллаже:</div>
@@ -61,7 +61,9 @@ export function ShelfTooltip(props: {
                   Размеры: {item.width}×{item.length}×{item.height} м
                 </div>
                 <div>Вес: {item.weight} кг</div>
-                <div>Уровень: {item.level !== null ? item.level + 1 : 'Не указан'}</div>
+                <div>
+                  Уровень: {item.level !== null ? item.level + 1 : 'Не указан'}
+                </div>
               </div>
             ))}
           </div>
