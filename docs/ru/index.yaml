@@ -4,9 +4,7 @@ meta:
   title: Главная
   noIndex: true
 links:
-  - title: Помощь
-    description: Описание всех возможностей того, как связаться с нами
-    href: help.md
-  - title: Правила
-    description: Описание платформы, ее основные возможности, особенности и преимущества.
-    href: rules.md
+  - title: Описание технического решения
+    description: Документация веб-приложения для оптимизации размещения товаров
+    href: technical-solution.md
+

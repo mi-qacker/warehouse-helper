@@ -2,7 +2,5 @@ title: Warehouse Helper
 href: index.yaml
 
 items:
-  - name: Помощь
-    href: help.md
-  - name: Правила
-    href: rules.md
+  - name: Описание технического решения
+    href: technical-solution.md
