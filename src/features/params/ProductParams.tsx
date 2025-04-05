@@ -1,6 +1,10 @@
 import {NewProduct, ZoneCondition} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
-import {useState} from 'react';
+import Button from '@/ui/Button';
+import Input from '@/ui/Input';
+import Select from '@/ui/Select';
+import React, {useCallback, useState} from 'react';
+import {ZONE_CONDITION_OPTIONS} from './common';
 
 export default function ProductForm() {
   const addProduct = useWarehouseStore(state => state.addProduct);
@@ -18,38 +22,46 @@ export default function ProductForm() {
     addProduct(formData);
   };
 
+  const onVolumeChange: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback(
+      event => {
+        const volume = Number(event.target.value);
+        setFormData({...formData, volume});
+      },
+      [formData]
+    );
+
+  const onChangeZoneCondition: React.ChangeEventHandler<HTMLSelectElement> =
+    useCallback(
+      event => {
+        const storageCondition = event.target.value as ZoneCondition;
+        setFormData({...formData, storageCondition});
+      },
+      [formData]
+    );
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label>Объём (м³)</label>
-        <input
-          type="number"
-          min="0"
-          value={formData.volume}
-          onChange={e =>
-            setFormData({...formData, volume: Number(e.target.value)})
-          }
-        />
-      </div>
+    <div className="space-y-4 rounded-lg p-4">
+      <Input
+        label="Объём (м³)"
+        type="number"
+        min="0"
+        value={formData.volume}
+        onChange={onVolumeChange}
+      />
 
-      <div>
-        <label>Условия хранения</label>
-        <select
-          value={formData.storageCondition}
-          onChange={e =>
-            setFormData({
-              ...formData,
-              storageCondition: e.target.value as ZoneCondition,
-            })
-          }
-        >
-          <option value="cold">Холодильная</option>
-          <option value="dry">Сухая</option>
-          <option value="normal">Обычная</option>
-        </select>
-      </div>
+      <Select
+        label="Условия хранения"
+        options={ZONE_CONDITION_OPTIONS}
+        value={formData.storageCondition}
+        onChange={onChangeZoneCondition}
+      >
+        <option value="cold">Холодильная</option>
+        <option value="dry">Сухая</option>
+        <option value="normal">Обычная</option>
+      </Select>
 
-      <button type="submit">Добавить товар</button>
-    </form>
+      <Button type="button" label="Добавить товар" onClick={handleSubmit} />
+    </div>
   );
 }

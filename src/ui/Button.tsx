@@ -7,7 +7,7 @@ export type ButtonProps = {
   color?: 'lime' | 'red' | 'amber';
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Button = forwardRef(function Button(
+export default forwardRef(function Button(
   {label, color = 'lime', ...buttonProps}: ButtonProps,
   ref: ForwardedRef<HTMLButtonElement>
 ) {
