@@ -1,6 +1,7 @@
 # План реализации интерфейса
 
 ## Архитектура компонентов
+
 ```
 src/features/params/
 ├── ProductForm.tsx      # Форма ввода товаров
@@ -9,7 +10,9 @@ src/features/params/
 ```
 
 ## Изменения в хранилище данных
+
 1. Обновление типов данных:
+
 ```typescript
 interface Product {
   id: number;
@@ -20,18 +23,20 @@ interface Product {
 
 interface Cell {
   id: string;
-  capacity: number; 
+  capacity: number;
   zoneCondition: 'холод' | 'сухо' | 'обычные';
 }
 ```
 
 2. Реализация методов:
+
 - `addProduct(product: Product)`
 - `removeProduct(id: number)`
 - `addCell(cell: Cell)`
 - `removeCell(id: string)`
 
 ## Валидация данных
+
 ```mermaid
 graph TD
     A[Форма товара] --> B[Проверка объёма > 0]
@@ -43,6 +48,7 @@ graph TD
 ```
 
 ## Этапы разработки
+
 1. Создание компонентов форм - 2 дня
 2. Интеграция с хранилищем - 1 день
 3. Реализация валидации - 1 день
