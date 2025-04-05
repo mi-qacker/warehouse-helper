@@ -18,7 +18,7 @@ const PARAM_CATEGORIES: ParamCategory[] = [
   {key: 'cell', label: 'Ячейки', content: <CellParams />},
 ];
 
-export function Params() {
+export default function Params() {
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>();
 
   useEffect(() => {

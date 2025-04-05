@@ -1,5 +1,5 @@
 import {WarehouseMap} from '@/features/warehouse-map/WarehouseMap';
-import {Params} from '@/features/params/Params';
+import Params from '@/features/params';
 
 export default function Page() {
   return (
