@@ -57,7 +57,9 @@ export default function CellForm() {
         name="zoneCondition"
       />
 
-      <Button label="Добавить ячейку" type="button" onClick={handleSubmit} />
+      <Button type="button" onClick={handleSubmit}>
+        Добавить ячейку
+      </Button>
     </div>
   );
 }

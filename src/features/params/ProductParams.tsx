@@ -3,6 +3,7 @@ import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
 import Input from '@/ui/Input';
 import Select from '@/ui/Select';
+import {PencilSquareIcon, TrashIcon} from '@heroicons/react/16/solid';
 import React, {useCallback, useMemo, useState} from 'react';
 import {ZONE_CONDITION_OPTIONS} from './common';
 
@@ -62,10 +63,18 @@ export default function ProductForm() {
 
       return (
         <li key={index} className="py-2">
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between">
             <span className="font-bold">{product.name}</span>
             <span>Объём: {product.volume} м³</span>
             <span>Условия: {product.storageCondition}</span>
+            <div className="flex flex-row gap-1">
+              <Button color="amber">
+                <PencilSquareIcon className="size-4" />
+              </Button>
+              <Button color="red">
+                <TrashIcon className="size-4" />
+              </Button>
+            </div>
           </div>
           {incompatibleProducts.length > 0 && (
             <div className="text-sm text-gray-500">
@@ -101,7 +110,9 @@ export default function ProductForm() {
         onChange={onChangeZoneCondition}
       />
 
-      <Button type="button" label="Добавить товар" onClick={handleSubmit} />
+      <Button type="button" onClick={handleSubmit}>
+        Добавить товар
+      </Button>
 
       <div className="mt-6 space-y-2">
         <h3 className="text-lg font-medium">Список товаров</h3>

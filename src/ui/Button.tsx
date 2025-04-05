@@ -1,14 +1,15 @@
-import {ButtonHTMLAttributes, ForwardedRef, forwardRef} from 'react';
+import React, {ButtonHTMLAttributes, ForwardedRef, forwardRef} from 'react';
 import {Button as ButtonUI} from '@headlessui/react';
 import clsx from 'clsx';
 
-export type ButtonProps = {
-  label: string;
-  color?: 'lime' | 'red' | 'amber';
-} & ButtonHTMLAttributes<HTMLButtonElement>;
+export type ButtonProps = React.PropsWithChildren<
+  {
+    color?: 'lime' | 'red' | 'amber';
+  } & ButtonHTMLAttributes<HTMLButtonElement>
+>;
 
 export default forwardRef(function Button(
-  {label, color = 'lime', ...buttonProps}: ButtonProps,
+  {children, color = 'lime', ...buttonProps}: ButtonProps,
   ref: ForwardedRef<HTMLButtonElement>
 ) {
   const colorClasses = {
@@ -27,7 +28,7 @@ export default forwardRef(function Button(
       ref={ref}
       {...buttonProps}
     >
-      {label}
+      {children}
     </ButtonUI>
   );
 });
