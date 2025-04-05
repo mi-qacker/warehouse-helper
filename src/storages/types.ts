@@ -2,6 +2,7 @@ export type ZoneCondition = 'cold' | 'dry' | 'normal';
 export type New<T extends {id: string}> = Omit<T, 'id'>;
 export type Product = {
   id: string;
+  name: string;
   volume: number;
   storageCondition: ZoneCondition;
   incompatibleWith: string[];
