@@ -2,9 +2,8 @@
 
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from '@headlessui/react';
 import {JSX, useCallback, useEffect, useState} from 'react';
-import {CargoParams} from './CargoParams';
-import {ShelvingParams} from './ShelvingParams';
-import {WarehouseParams} from './WarehouseParams';
+import CellParams from './CellParams';
+import ProductParams from './ProductParams';
 
 const SEARCH_PARAMS_KEY = 'tabIndex';
 
@@ -15,9 +14,8 @@ type ParamCategory = {
 };
 
 const PARAM_CATEGORIES: ParamCategory[] = [
-  {key: 'warehouse', label: 'Склад', content: <WarehouseParams />},
-  {key: 'shelving', label: 'Стеллажи', content: <ShelvingParams />},
-  {key: 'cargo', label: 'Груз', content: <CargoParams />},
+  {key: 'product', label: 'Товары', content: <ProductParams />},
+  {key: 'cell', label: 'Ячейки', content: <CellParams />},
 ];
 
 export function Params() {

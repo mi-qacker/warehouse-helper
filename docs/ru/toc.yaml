@@ -1,6 +1,8 @@
-title: Warehouse Helper
-href: index.yaml
-
+title: Документация
 items:
-  - name: Описание технического решения
+  - name: Техническое решение
     href: technical-solution.md
+  - name: План реализации
+    href: implementation-plan.md
+  - name: Руководство разработчика
+    href: development-guide.md
