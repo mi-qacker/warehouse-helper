@@ -4,7 +4,7 @@ export type Product = {
   id: string;
   volume: number;
   storageCondition: ZoneCondition;
-  incompatibleWith: number[];
+  incompatibleWith: string[];
 };
 export type NewProduct = New<Product>;
 export type Cell = {
