@@ -5,13 +5,12 @@ export type InputProps = {
   label: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export const Input = forwardRef(function Input(
+export default forwardRef(function Input(
   {label, ...inputProps}: InputProps,
   ref: ForwardedRef<HTMLInputElement>
 ) {
   return (
     <Field>
-      <input type="button" value="" />
       <Label className="text-sm">{label}</Label>
       <InputUI
         ref={ref}

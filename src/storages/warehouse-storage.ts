@@ -5,51 +5,36 @@ import {WarehouseStore} from './types';
 export const useWarehouseStore = create<WarehouseStore>()(
   persist(
     (set, get) => ({
-      warehouse: {width: 16, length: 16},
-      updateWarehouse: newParams => set({warehouse: newParams}),
-
-      shelving: [],
-      addShelf: newShelf =>
+      products: [],
+      addProduct: newProduct =>
         set({
-          shelving: [...get().shelving, {...newShelf, id: crypto.randomUUID()}],
-        }),
-      updateShelf: (id, updatedShelf) =>
-        set({
-          shelving: get().shelving.map(shelf =>
-            shelf.id === id ? {...updatedShelf, id} : shelf
-          ),
-        }),
-      removeShelf: id =>
-        set({shelving: get().shelving.filter(shelf => shelf.id !== id)}),
-
-      cargo: [],
-      addCargo: newCargo =>
-        set({
-          cargo: [
-            ...get().cargo,
-            {
-              ...newCargo,
-              id: crypto.randomUUID(),
-              shelfId: newCargo.shelfId ?? null,
-              level: newCargo.level ?? null,
-            },
+          products: [
+            ...get().products,
+            {...newProduct, id: crypto.randomUUID()},
           ],
         }),
-      updateCargo: (id, updatedCargo) =>
+      updateProduct: (id, updatedProduct) =>
         set({
-          cargo: get().cargo.map(cargo =>
-            cargo.id === id
-              ? {
-                  ...updatedCargo,
-                  id,
-                  shelfId: updatedCargo.shelfId ?? null,
-                  level: updatedCargo.level ?? null,
-                }
-              : cargo
+          products: get().products.map(product =>
+            product.id === id ? {...updatedProduct, id} : product
           ),
         }),
-      removeCargo: id =>
-        set({cargo: get().cargo.filter(cargo => cargo.id !== id)}),
+      removeProduct: id =>
+        set({products: get().products.filter(product => product.id !== id)}),
+      getProduct: id => get().products.find(product => product.id === id),
+
+      cells: [],
+      addCell: newCell =>
+        set({cells: [...get().cells, {...newCell, id: crypto.randomUUID()}]}),
+      updateCell: (id, updatedCell) =>
+        set({
+          cells: get().cells.map(cell =>
+            cell.id === id ? {...updatedCell, id} : cell
+          ),
+        }),
+      removeCell: id =>
+        set({cells: get().cells.filter(cell => cell.id !== id)}),
+      getCell: id => get().cells.find(cell => cell.id === id),
     }),
     {
       name: 'warehouse-params',

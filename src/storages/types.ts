@@ -1,37 +1,30 @@
-export type WarehouseParams = {width: number; length: number};
-export type ShelfParams = {
-  x: number;
-  y: number;
-  width: number;
-  length: number;
-  height: number;
-  levels: number;
+export type ZoneCondition = 'cold' | 'dry' | 'normal';
+export type New<T extends {id: string}> = Omit<T, 'id'>;
+export type Product = {
   id: string;
+  name: string;
+  volume: number;
+  storageCondition: ZoneCondition;
+  incompatibleWith: string[];
 };
-export type NewShelfParams = Omit<ShelfParams, 'id'>;
-
-export type CargoParams = {
-  width: number;
-  length: number;
-  height: number;
-  weight: number;
+export type NewProduct = New<Product>;
+export type Cell = {
   id: string;
-  shelfId: string | null;
-  level: number | null;
+  name: string;
+  capacity: number;
+  zoneCondition: ZoneCondition;
 };
-export type NewCargoParams = Omit<CargoParams, 'id'>;
-
+export type NewCell = New<Cell>;
 export type WarehouseStore = {
-  warehouse: WarehouseParams;
-  updateWarehouse: (newParams: WarehouseParams) => void;
+  products: Product[];
+  addProduct: (product: NewProduct) => void;
+  updateProduct: (id: string, product: NewProduct) => void;
+  removeProduct: (id: string) => void;
+  getProduct: (id: string) => Product | undefined;
 
-  shelving: ShelfParams[];
-  addShelf: (shelf: NewShelfParams) => void;
-  updateShelf: (id: string, shelf: NewShelfParams) => void;
-  removeShelf: (id: string) => void;
-
-  cargo: CargoParams[];
-  addCargo: (cargo: NewCargoParams) => void;
-  updateCargo: (id: string, cargo: NewCargoParams) => void;
-  removeCargo: (id: string) => void;
+  cells: Cell[];
+  addCell: (cell: NewCell) => void;
+  updateCell: (id: string, cell: NewCell) => void;
+  removeCell: (id: string) => void;
+  getCell: (id: string) => Cell | undefined;
 };
