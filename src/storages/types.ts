@@ -10,6 +10,7 @@ export type Product = {
 export type NewProduct = New<Product>;
 export type Cell = {
   id: string;
+  name: string;
   capacity: number;
   zoneCondition: ZoneCondition;
 };
@@ -25,4 +26,5 @@ export type WarehouseStore = {
   addCell: (cell: NewCell) => void;
   updateCell: (id: string, cell: NewCell) => void;
   removeCell: (id: string) => void;
+  getCell: (id: string) => Cell | undefined;
 };

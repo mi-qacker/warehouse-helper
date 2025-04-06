@@ -34,6 +34,7 @@ export const useWarehouseStore = create<WarehouseStore>()(
         }),
       removeCell: id =>
         set({cells: get().cells.filter(cell => cell.id !== id)}),
+      getCell: id => get().cells.find(cell => cell.id === id),
     }),
     {
       name: 'warehouse-params',
