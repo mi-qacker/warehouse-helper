@@ -3,8 +3,19 @@ import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
 import Input from '@/ui/Input';
 import Select from '@/ui/Select';
-import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react';
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Field,
+  Label,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from '@headlessui/react';
 import {PencilSquareIcon, TrashIcon} from '@heroicons/react/16/solid';
+import {CheckIcon} from '@heroicons/react/20/solid';
 import {ChevronDownIcon} from '@heroicons/react/20/solid';
 import React, {useCallback, useMemo, useState} from 'react';
 import {ZONE_CONDITION_OPTIONS} from './common';
@@ -67,6 +78,13 @@ export default function ProductForm() {
       [formData]
     );
 
+  const onIncompatibleWithChange = useCallback(
+    (value: string[]) => {
+      setFormData({...formData, incompatibleWith: value});
+    },
+    [formData]
+  );
+
   const onDeleteProduct = useCallback(
     (productId: string) => {
       removeProduct(productId);
@@ -119,6 +137,52 @@ export default function ProductForm() {
     });
   }, [products, onSelectProduct, onDeleteProduct]);
 
+  const incompatibleWithProducts = useMemo(() => {
+    const options = products.map(product => (
+      <ListboxOption
+        key={product.id}
+        value={product.id}
+        className="group flex cursor-pointer items-center gap-2 py-1 select-none hover:font-bold"
+      >
+        <CheckIcon className="invisible size-4 group-data-[selected]:visible" />
+        <div className="text-sm">{product.name}</div>
+      </ListboxOption>
+    ));
+
+    const placeholder =
+      formData.incompatibleWith.length === 0
+        ? 'Не выбрано'
+        : products
+            .filter(({id}) => formData.incompatibleWith.includes(id))
+            .map(({name}) => name)
+            .join(', ');
+
+    return (
+      <Field>
+        <Label className="text-sm">
+          Список товаров, с которыми текущий товар несовместим
+        </Label>
+        <Listbox
+          as="div"
+          value={formData.incompatibleWith}
+          onChange={onIncompatibleWithChange}
+          multiple={true}
+        >
+          <ListboxButton className="relative flex w-full items-center justify-between rounded-lg border-2 border-neutral-200 px-2 py-2 text-left">
+            {placeholder}
+            <ChevronDownIcon className="size-4" />
+          </ListboxButton>
+          <ListboxOptions
+            anchor="bottom"
+            className="rounded-lg border-1 border-neutral-100 bg-neutral-200 px-2 py-2"
+          >
+            {options}
+          </ListboxOptions>
+        </Listbox>
+      </Field>
+    );
+  }, [formData.incompatibleWith, onIncompatibleWithChange, products]);
+
   return (
     <div className="space-y-4 rounded-lg p-4">
       <Input
@@ -142,6 +206,8 @@ export default function ProductForm() {
         value={formData.storageCondition}
         onChange={onChangeZoneCondition}
       />
+
+      {incompatibleWithProducts}
 
       <Button type="button" onClick={handleSubmit}>
         {selectedId === null ? 'Добавить товар' : 'Обновить товар'}
