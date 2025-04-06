@@ -4,5 +4,3 @@ items:
     href: technical-solution.md
   - name: План реализации
     href: implementation-plan.md
-  - name: Руководство разработчика
-    href: development-guide.md
