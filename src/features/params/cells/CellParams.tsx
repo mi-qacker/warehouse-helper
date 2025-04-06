@@ -4,7 +4,7 @@ import Button from '@/ui/Button';
 import Input from '@/ui/Input';
 import Select from '@/ui/Select';
 import React, {useCallback, useState} from 'react';
-import {ZONE_CONDITION_OPTIONS} from './common';
+import {ZONE_CONDITION_OPTIONS} from '../common';
 
 export default function CellForm() {
   const addCell = useWarehouseStore(state => state.addCell);

@@ -2,8 +2,8 @@
 
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from '@headlessui/react';
 import {JSX, useCallback, useEffect, useState} from 'react';
-import CellParams from './CellParams';
-import ProductParams from './ProductParams';
+import CellParams from './cells/CellParams';
+import ProductParams from './products/ProductParams';
 
 const SEARCH_PARAMS_KEY = 'tabIndex';
 

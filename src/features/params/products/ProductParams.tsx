@@ -14,11 +14,10 @@ import {
   ListboxOption,
   ListboxOptions,
 } from '@headlessui/react';
-import {PencilSquareIcon, TrashIcon} from '@heroicons/react/16/solid';
-import {CheckIcon} from '@heroicons/react/20/solid';
-import {ChevronDownIcon} from '@heroicons/react/20/solid';
+import {CheckIcon, ChevronDownIcon} from '@heroicons/react/20/solid';
 import React, {useCallback, useMemo, useState} from 'react';
-import {ZONE_CONDITION_OPTIONS} from './common';
+import {ZONE_CONDITION_OPTIONS} from '../common';
+import {ProductCard} from './ProductCard';
 
 const INITIAL_FORM_DATA: NewProduct = {
   volume: 0,
@@ -107,32 +106,13 @@ export default function ProductForm() {
 
   const productsList = useMemo(() => {
     return products.map((product, index) => {
-      const incompatibleProducts = product.incompatibleWith.map(
-        incompatibleProduct =>
-          products.find(({id}) => id === incompatibleProduct)?.name
-      );
-
       return (
-        <li key={index} className="py-2">
-          <div className="flex items-center justify-between">
-            <span className="font-bold">{product.name}</span>
-            <span>Объём: {product.volume} м³</span>
-            <span>Условия: {product.storageCondition}</span>
-            <div className="flex flex-row gap-1">
-              <Button color="amber" onClick={() => onSelectProduct(product.id)}>
-                <PencilSquareIcon className="size-4" />
-              </Button>
-              <Button color="red" onClick={() => onDeleteProduct(product.id)}>
-                <TrashIcon className="size-4" />
-              </Button>
-            </div>
-          </div>
-          {incompatibleProducts.length > 0 && (
-            <div className="text-sm text-gray-500">
-              Несовместим с: {incompatibleProducts.join(', ')}
-            </div>
-          )}
-        </li>
+        <ProductCard
+          key={index}
+          product={product}
+          onSelectProduct={onSelectProduct}
+          onDeleteProduct={onDeleteProduct}
+        />
       );
     });
   }, [products, onSelectProduct, onDeleteProduct]);
