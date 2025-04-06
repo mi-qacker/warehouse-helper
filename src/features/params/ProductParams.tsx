@@ -3,7 +3,9 @@ import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
 import Input from '@/ui/Input';
 import Select from '@/ui/Select';
+import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react';
 import {PencilSquareIcon, TrashIcon} from '@heroicons/react/16/solid';
+import {ChevronDownIcon} from '@heroicons/react/20/solid';
 import React, {useCallback, useMemo, useState} from 'react';
 import {ZONE_CONDITION_OPTIONS} from './common';
 
@@ -17,16 +19,27 @@ const INITIAL_FORM_DATA: NewProduct = {
 export default function ProductForm() {
   const products = useWarehouseStore(state => state.products);
   const addProduct = useWarehouseStore(state => state.addProduct);
-  // const updateProduct = useWarehouseStore(state => state.updateProduct);
-  // const removeProduct = useWarehouseStore(state => state.removeProduct);
+  const getProduct = useWarehouseStore(state => state.getProduct);
+  const updateProduct = useWarehouseStore(state => state.updateProduct);
+  const removeProduct = useWarehouseStore(state => state.removeProduct);
 
   const [formData, setFormData] = useState<NewProduct>(INITIAL_FORM_DATA);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    addProduct(formData);
-    setFormData(INITIAL_FORM_DATA);
-  };
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+
+      if (selectedId === null) {
+        addProduct(formData);
+      } else {
+        updateProduct(selectedId, formData);
+        setSelectedId(null);
+      }
+      setFormData(INITIAL_FORM_DATA);
+    },
+    [addProduct, formData, selectedId, updateProduct]
+  );
 
   const onNameChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     event => {
@@ -54,6 +67,26 @@ export default function ProductForm() {
       [formData]
     );
 
+  const onDeleteProduct = useCallback(
+    (productId: string) => {
+      removeProduct(productId);
+    },
+    [removeProduct]
+  );
+
+  const onSelectProduct = useCallback(
+    (productId: string) => {
+      const selectedProduct = getProduct(productId);
+
+      if (!selectedProduct) return;
+
+      const {id, ...data} = selectedProduct;
+      setSelectedId(id);
+      setFormData(data);
+    },
+    [getProduct]
+  );
+
   const productsList = useMemo(() => {
     return products.map((product, index) => {
       const incompatibleProducts = product.incompatibleWith.map(
@@ -68,10 +101,10 @@ export default function ProductForm() {
             <span>Объём: {product.volume} м³</span>
             <span>Условия: {product.storageCondition}</span>
             <div className="flex flex-row gap-1">
-              <Button color="amber">
+              <Button color="amber" onClick={() => onSelectProduct(product.id)}>
                 <PencilSquareIcon className="size-4" />
               </Button>
-              <Button color="red">
+              <Button color="red" onClick={() => onDeleteProduct(product.id)}>
                 <TrashIcon className="size-4" />
               </Button>
             </div>
@@ -84,7 +117,7 @@ export default function ProductForm() {
         </li>
       );
     });
-  }, [products]);
+  }, [products, onSelectProduct, onDeleteProduct]);
 
   return (
     <div className="space-y-4 rounded-lg p-4">
@@ -111,13 +144,18 @@ export default function ProductForm() {
       />
 
       <Button type="button" onClick={handleSubmit}>
-        Добавить товар
+        {selectedId === null ? 'Добавить товар' : 'Обновить товар'}
       </Button>
 
-      <div className="mt-6 space-y-2">
-        <h3 className="text-lg font-medium">Список товаров</h3>
-        <ul className="divide-y divide-gray-200">{productsList}</ul>
-      </div>
+      <Disclosure as="div" defaultOpen={true} className="w-full">
+        <DisclosureButton className="group flex w-full items-center justify-between gap-2">
+          <span>Список товаров</span>
+          <ChevronDownIcon className="w-5 group-data-[open]:rotate-180" />
+        </DisclosureButton>
+        <DisclosurePanel>
+          <ul className="divide-y divide-gray-200">{productsList}</ul>
+        </DisclosurePanel>
+      </Disclosure>
     </div>
   );
 }

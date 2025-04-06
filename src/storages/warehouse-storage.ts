@@ -21,6 +21,8 @@ export const useWarehouseStore = create<WarehouseStore>()(
         }),
       removeProduct: id =>
         set({products: get().products.filter(product => product.id !== id)}),
+      getProduct: id => get().products.find(product => product.id === id),
+
       cells: [],
       addCell: newCell =>
         set({cells: [...get().cells, {...newCell, id: crypto.randomUUID()}]}),

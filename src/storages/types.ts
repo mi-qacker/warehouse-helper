@@ -19,6 +19,7 @@ export type WarehouseStore = {
   addProduct: (product: NewProduct) => void;
   updateProduct: (id: string, product: NewProduct) => void;
   removeProduct: (id: string) => void;
+  getProduct: (id: string) => Product | undefined;
 
   cells: Cell[];
   addCell: (cell: NewCell) => void;
