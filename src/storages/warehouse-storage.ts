@@ -1,16 +1,20 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
+import {DEMO_DATA} from './init-data';
 import {WarehouseStore} from './types';
 
 export const useWarehouseStore = create<WarehouseStore>()(
   persist(
     (set, get) => ({
-      products: [],
+      // Initial data
+      ...DEMO_DATA,
+
+      // Product functions
       addProduct: newProduct =>
         set({
           products: [
             ...get().products,
-            {...newProduct, id: crypto.randomUUID()},
+            {...newProduct, id: `prod-${crypto.randomUUID()}`},
           ],
         }),
       updateProduct: (id, updatedProduct) =>
@@ -23,9 +27,14 @@ export const useWarehouseStore = create<WarehouseStore>()(
         set({products: get().products.filter(product => product.id !== id)}),
       getProduct: id => get().products.find(product => product.id === id),
 
-      cells: [],
+      // Cells functions
       addCell: newCell =>
-        set({cells: [...get().cells, {...newCell, id: crypto.randomUUID()}]}),
+        set({
+          cells: [
+            ...get().cells,
+            {...newCell, id: `cell-${crypto.randomUUID()}`},
+          ],
+        }),
       updateCell: (id, updatedCell) =>
         set({
           cells: get().cells.map(cell =>
