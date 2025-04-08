@@ -13,6 +13,7 @@ const INITIAL_FORM_DATA: NewCell = {
   name: '',
   capacity: 0,
   zoneCondition: 'normal',
+  position: {x: 0, y: 0},
 };
 
 export default function CellForm() {
@@ -32,6 +33,30 @@ export default function CellForm() {
     },
     [formData]
   );
+
+  const onPositionXChange: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback(
+      event => {
+        const x = Number(event.target.value);
+        setFormData({
+          ...formData,
+          position: {...formData.position, x},
+        });
+      },
+      [formData]
+    );
+
+  const onPositionYChange: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback(
+      event => {
+        const y = Number(event.target.value);
+        setFormData({
+          ...formData,
+          position: {...formData.position, y},
+        });
+      },
+      [formData]
+    );
 
   const onChangeCapacity: React.ChangeEventHandler<HTMLInputElement> =
     useCallback(
@@ -124,6 +149,24 @@ export default function CellForm() {
         onChange={onChangeZoneCondition}
         name="zoneCondition"
       />
+
+      <div className="temp grid grid-cols-2 gap-2">
+        <Input
+          type="number"
+          min="0"
+          value={formData.position.x}
+          label="Координата X"
+          onChange={onPositionXChange}
+        />
+
+        <Input
+          type="number"
+          min="0"
+          value={formData.position.y}
+          label="Координата Y"
+          onChange={onPositionYChange}
+        />
+      </div>
 
       <Button type="button" onClick={handleSubmit}>
         {selectedId === null ? 'Добавить ячейку' : 'Обновить ячейку'}

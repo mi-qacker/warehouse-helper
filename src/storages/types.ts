@@ -1,4 +1,8 @@
 export type ZoneCondition = 'cold' | 'dry' | 'normal';
+export type Position = {
+  x: number;
+  y: number;
+};
 export type New<T extends {id: string}> = Omit<T, 'id'>;
 export type Product = {
   id: string;
@@ -13,6 +17,7 @@ export type Cell = {
   name: string;
   capacity: number;
   zoneCondition: ZoneCondition;
+  position: Position;
 };
 export type NewCell = New<Cell>;
 export type WarehouseStore = {
