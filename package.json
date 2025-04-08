@@ -10,6 +10,7 @@
     "test:playwright": "playwright test",
     "lint": "next lint",
     "lint:prettier": "prettier . --check",
+    "lint:prettier:fix": "prettier . --write",
     "lint:stylelint": "stylelint \"**/*.css\""
   },
   "dependencies": {
