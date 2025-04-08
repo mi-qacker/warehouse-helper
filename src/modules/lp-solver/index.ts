@@ -68,44 +68,38 @@ export async function solveOptimizationPlacement(
     lp.subjectTo.push(constraint);
   });
 
-  // lp.subjectTo.push({
-  //   name: 'all_products',
-  //   vars: lp.binaries!.map(name => ({name, coef: 1})),
-  //   bnds: {type: glpk.GLP_FX, lb: products.length, ub: products.length},
-  // });
-
   // Storage conditions: x_ij = 0 if storage conditions don't match
-  // products.forEach(product => {
-  //   cells.forEach(cell => {
-  //     if (product.storageCondition !== cell.zoneCondition) {
-  //       const varName = `x_${product.id}_${cell.id}`;
-  //       lp.subjectTo.push({
-  //         name: `storage_${product.id}_${cell.id}`,
-  //         vars: [{name: varName, coef: 1}],
-  //         bnds: {type: glpk.GLP_FX, ub: 0, lb: 0},
-  //       });
-  //     }
-  //   });
-  // });
+  products.forEach(product => {
+    cells.forEach(cell => {
+      if (product.storageCondition !== cell.zoneCondition) {
+        const varName = `x_${product.id}_${cell.id}`;
+        lp.subjectTo.push({
+          name: `storage_${product.id}_${cell.id}`,
+          vars: [{name: varName, coef: 1}],
+          bnds: {type: glpk.GLP_FX, ub: 0, lb: 0},
+        });
+      }
+    });
+  });
 
   // Incompatibility constraints: x_ij + x_kj <= 1 for incompatible pairs
-  // products.forEach(product => {
-  //   product.incompatibleWith?.forEach(incompatibleId => {
-  //     const incompatibleProduct = products.find(p => p.id === incompatibleId);
-  //     if (!incompatibleProduct) return;
+  products.forEach(product => {
+    product.incompatibleWith?.forEach(incompatibleId => {
+      const incompatibleProduct = products.find(p => p.id === incompatibleId);
+      if (!incompatibleProduct) return;
 
-  //     cells.forEach(cell => {
-  //       lp.subjectTo.push({
-  //         name: `incompatible_${product.id}_${incompatibleId}_${cell.id}`,
-  //         vars: [
-  //           {name: `x_${product.id}_${cell.id}`, coef: 1},
-  //           {name: `x_${incompatibleId}_${cell.id}`, coef: 1},
-  //         ],
-  //         bnds: {type: glpk.GLP_UP, ub: 1, lb: 0},
-  //       });
-  //     });
-  //   });
-  // });
+      cells.forEach(cell => {
+        lp.subjectTo.push({
+          name: `incompatible_${product.id}_${incompatibleId}_${cell.id}`,
+          vars: [
+            {name: `x_${product.id}_${cell.id}`, coef: 1},
+            {name: `x_${incompatibleId}_${cell.id}`, coef: 1},
+          ],
+          bnds: {type: glpk.GLP_UP, ub: 1, lb: 0},
+        });
+      });
+    });
+  });
 
   // Solve the problem
   const result = await glpk.solve(lp, glpk.GLP_MSG_DBG);
