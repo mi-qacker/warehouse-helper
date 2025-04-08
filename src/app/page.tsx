@@ -1,3 +1,5 @@
+'use client';
+
 import {WarehouseMap} from '@/features/warehouse-map/WarehouseMap';
 import Params from '@/features/params';
 

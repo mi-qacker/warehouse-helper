@@ -3,21 +3,21 @@ import {WarehouseStore} from './types';
 export const DEMO_DATA: Pick<WarehouseStore, `products` | `cells`> = {
   cells: [
     {
-      id: `cell-${crypto.randomUUID()}`,
+      id: `cell-${1}`,
       name: `A1`,
       capacity: 100,
       zoneCondition: `normal`,
       position: {x: 0, y: 0},
     },
     {
-      id: `cell-${crypto.randomUUID()}`,
+      id: `cell-${2}`,
       name: `B2`,
       capacity: 50,
       zoneCondition: `cold`,
       position: {x: 1, y: 0},
     },
     {
-      id: `cell-${crypto.randomUUID()}`,
+      id: `cell-${3}`,
       name: `C3`,
       capacity: 200,
       zoneCondition: `dry`,
@@ -26,28 +26,28 @@ export const DEMO_DATA: Pick<WarehouseStore, `products` | `cells`> = {
   ],
   products: [
     {
-      id: `prod-${crypto.randomUUID()}`,
+      id: `prod-${1}`,
       name: `Electronics`,
       volume: 10,
       storageCondition: `dry`,
       incompatibleWith: [`prod-2`],
     },
     {
-      id: `prod-${crypto.randomUUID()}`,
+      id: `prod-${2}`,
       name: `Frozen Food`,
       volume: 5,
       storageCondition: `cold`,
       incompatibleWith: [`prod-1`, `prod-3`],
     },
     {
-      id: `prod-${crypto.randomUUID()}`,
+      id: `prod-${3}`,
       name: `Medicines`,
       volume: 2,
       storageCondition: `cold`,
       incompatibleWith: [`prod-2`],
     },
     {
-      id: `prod-${crypto.randomUUID()}`,
+      id: `prod-${4}`,
       name: `General Goods`,
       volume: 15,
       storageCondition: `normal`,
