@@ -21,6 +21,7 @@ export const ProductGridCard = ({product}: {product: Product}) => {
   return (
     <div key={product.id} className="flex flex-col rounded-sm border p-2">
       <div className="text-sm font-semibold">{product.name}</div>
+      <span className="text-sm">{product.volume} м³</span>
       <span className="text-sm">{product.storageCondition}</span>
 
       {incompatibleWith.length > 0 && (
