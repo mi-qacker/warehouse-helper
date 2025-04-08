@@ -46,6 +46,24 @@ export function WarehouseMap() {
     });
   }, [cells, getCell, getProduct, products]);
 
+  const renderOutputs = useMemo(() => {
+    if (Object.keys(output).length === 0) {
+      return null;
+    }
+    return Object.entries(output).map(([cellName, products], index) => (
+      <div key={index} className="rounded-md border p-2">
+        <div className="font-bold">{cellName}</div>
+        <ul className="list-inside list-disc">
+          {products.map((name, index) => (
+            <li key={index} className="text-sm">
+              {name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ));
+  }, [output]);
+
   return (
     <div className="space-y-6 p-4">
       <div>
@@ -58,9 +76,7 @@ export function WarehouseMap() {
         {productsGrid}
       </div>
       <Button onClick={onClickLPSolver}>Оптимизировать расстановку</Button>
-      <div>
-        {Object.keys(output).length !== 0 && JSON.stringify(output, null, 2)}
-      </div>
+      <div className="flex flex-row flex-wrap gap-2">{renderOutputs}</div>
     </div>
   );
 }
