@@ -16,8 +16,12 @@ on:
     branches: ['main']
   pull_request:
     branches: ['main']
+    paths-ignore:
+      - 'package.json'
+      - 'package-lock.json'
+      - '**/*.md'
   schedule:
-    - cron: '37 14 * * 0'
+    - cron: '0 10 * * 1' # 10:00 every monday
 
 jobs:
   analyze:
