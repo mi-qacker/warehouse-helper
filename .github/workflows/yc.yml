@@ -21,7 +21,7 @@ jobs:
           echo ":/opt/yc/bin" >> $GITHUB_PATH
       - name: Create profile YC CLI
         run: |
-          yc config profile create github-actions-profile
+          yc config profile create github-actions
           yc config set cloud-id ${{ vars.YC_CLOUD_ID }}
           yc config set folder-id ${{ vars.YC_FOLDER_ID }}
           echo '${{ secrets.YC_SERVICE_ACCOUNT_KEY }}' > key.json
