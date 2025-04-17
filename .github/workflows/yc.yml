@@ -1,5 +1,9 @@
 name: 'Yandex Cloud test workflow'
 
+permissions:
+  contents: read
+  pull-requests: write
+
 on:
   push:
     branches: ['main']
@@ -11,4 +15,10 @@ jobs:
     name: 'Initialize YC CLI'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Install YC CLI
+        run: |
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+          echo ":/opt/yc/bin" >> $GITHUB_PATH
+      - name: Create profile YC CLI
+        run: yc config profile create github-actions-profile
+      - run: yc config list
