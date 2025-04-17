@@ -56,11 +56,11 @@ jobs:
           yc config set service-account-key key.json
       - name: Deploy revision
         # TODO: перенести конфиг ревизии в отдельный файл
-        run: yc serverless container revision deploy \
-          --container-name ${{vars.CONTAINER_NAME}} \
-          --image ${{vars.DOCKER_NAME }}:${{ vars.TAG }} \
-          --cores 1 \
-          --memory 512MB \
-          --concurrency 1 \
-          --execution-timeout 30s \
+        run: yc serverless container revision deploy
+          --container-name ${{vars.CONTAINER_NAME}}
+          --image ${{vars.DOCKER_NAME }}:${{ vars.TAG }}
+          --cores 1
+          --memory 512MB
+          --concurrency 1
+          --execution-timeout 30s
           --service-account-id ${{vars.SERVERLESS_SERVICE_ACCOUNT_ID}}
