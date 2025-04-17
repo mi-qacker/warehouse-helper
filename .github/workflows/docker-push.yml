@@ -35,3 +35,32 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: ${{vars.DOCKER_NAME }}:${{ vars.TAG }}
+  deploy-revision:
+    name: Deploy new revision in Yandex Cloud
+    needs: push_to_registry
+    runs-on: ubuntu-latest
+    environment:
+      name: testing
+      url: ${{vars.URL}}
+    steps:
+      - name: Install YC CLI
+        run: |
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+          echo ":/opt/yc/bin" >> $GITHUB_PATH
+      - name: Create profile YC CLI
+        run: |
+          yc config profile create github-actions
+          yc config set cloud-id ${{ vars.YC_CLOUD_ID }}
+          yc config set folder-id ${{ vars.YC_FOLDER_ID }}
+          echo '${{ secrets.YC_SERVICE_ACCOUNT_KEY }}' > key.json
+          yc config set service-account-key key.json
+      - name: Deploy revision
+        # TODO: перенести конфиг ревизии в отдельный файл
+        run: yc serverless container revision deploy \
+          --container-name ${{vars.CONTAINER_NAME}} \
+          --image ${{vars.DOCKER_NAME }}:${{ vars.TAG }} \
+          --cores 1 \
+          --memory 512MB \
+          --concurrency 1 \
+          --execution-timeout 30s \
+          --service-account-id ${{vars.SERVERLESS_SERVICE_ACCOUNT_ID}}
