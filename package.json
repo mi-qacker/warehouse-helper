@@ -18,6 +18,7 @@
     "@headlessui/react": "^2.2.2",
     "@heroicons/react": "^2.2.0",
     "clsx": "^2.1.1",
+    "genetic-js": "^0.1.14",
     "glpk.js": "^4.0.2",
     "next": "15.3.1",
     "react": "^19.1.0",
