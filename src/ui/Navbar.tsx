@@ -10,6 +10,13 @@ export function Navbar() {
         </Link>
 
         <div className="flex space-x-4">
+          <NavbarLink label="Parameters" href="/parameters" />
+          <NavbarLink label="Map" href="/map" />
+          <NavbarLink label="Placement" href="/placement" />
+          <NavbarLink label="Trail" href="/trail" />
+        </div>
+
+        <div className="flex space-x-4">
           <NavbarLink label="Home" href="/" />
           <NavbarLink label="Docs" href={CONFIG.DOCS_URL} blank />
           <NavbarLink label="About" href="/about" />
