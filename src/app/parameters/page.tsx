@@ -1,3 +1,10 @@
+import Params from '@/features/params';
+
 export default function ParametersPage() {
-  return <h1>Parameters page</h1>;
+  return (
+    <main>
+      <h1>Warehouse Parameters</h1>
+      <Params />
+    </main>
+  );
 }

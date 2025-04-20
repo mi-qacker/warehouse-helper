@@ -1,3 +1,5 @@
+'use client';
+
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from '@headlessui/react';
 import {JSX, useCallback, useEffect, useState} from 'react';
 import CellParams from './cells/CellParams';

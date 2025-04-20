@@ -1,3 +1,5 @@
+'use client';
+
 import {solveOptimizationPlacement} from '@/modules/lp-solver';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
@@ -6,7 +8,7 @@ import {useShallow} from 'zustand/shallow';
 import {CellGridCard} from './CellGridCard';
 import {ProductGridCard} from './ProductGridCard';
 
-export function WarehouseMap() {
+export default function WarehouseMap() {
   const {products, cells} = useWarehouseStore(
     useShallow(({products, cells}) => ({products, cells}))
   );

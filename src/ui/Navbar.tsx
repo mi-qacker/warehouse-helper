@@ -17,7 +17,6 @@ export function Navbar() {
         </div>
 
         <div className="flex space-x-4">
-          <NavbarLink label="Home" href="/" />
           <NavbarLink label="Docs" href={CONFIG.DOCS_URL} blank />
           <NavbarLink label="About" href="/about" />
         </div>

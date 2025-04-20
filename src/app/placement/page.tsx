@@ -1,3 +1,7 @@
 export default function PlacementPage() {
-  return <h1>Placement page</h1>;
+  return (
+    <main>
+      <h1>Placement page</h1>
+    </main>
+  );
 }

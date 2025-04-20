@@ -1,3 +1,7 @@
 export default function TrailPage() {
-  return <h1>Trail page</h1>;
+  return (
+    <main>
+      <h1>Trail page</h1>
+    </main>
+  );
 }
