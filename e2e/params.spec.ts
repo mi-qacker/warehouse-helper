@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 
 test.describe('Params Component', () => {
   test.beforeEach(async ({page}) => {
-    await page.goto('/');
+    await page.goto('/parameters');
   });
 
   test('should render all tabs', async ({page}) => {
@@ -31,7 +31,7 @@ test.describe('Params Component', () => {
   });
 
   test('should restore tab state from URL', async ({page}) => {
-    await page.goto('/?tabIndex=1');
+    await page.goto('/parameters?tabIndex=1');
     const activeTab = page.locator('[role="tab"][aria-selected="true"]');
     await expect(activeTab).toHaveText('Ячейки');
   });
