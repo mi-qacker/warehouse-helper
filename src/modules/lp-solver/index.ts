@@ -1,6 +1,10 @@
 import {Product, Cell, Position} from '@/storages/types';
 import type {LP, GLPK} from 'glpk.js';
 
+export type Solution = {
+  [cellId: string]: string[];
+};
+
 let glpk: GLPK;
 
 async function loadGLPK() {
@@ -14,7 +18,7 @@ async function loadGLPK() {
 export async function solveOptimizationPlacement(
   products: Product[],
   cells: Cell[]
-) {
+): Promise<Solution> {
   const glpk = await loadGLPK();
   const lp: LP = {
     name: 'ProductPlacement',
@@ -111,7 +115,7 @@ export async function solveOptimizationPlacement(
   console.log(message);
 
   // Format the result
-  const solution: Record<string, string[]> = {};
+  const solution: Solution = {};
   Object.entries(result.result.vars).forEach(([varName, value]) => {
     if (!value) return;
 
