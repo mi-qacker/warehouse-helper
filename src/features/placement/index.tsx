@@ -12,21 +12,27 @@ export default function PlacementComponent() {
   const getProduct = useWarehouseStore(store => store.getProduct);
 
   const [output, setOutput] = useState<Record<string, string[]>>({});
+  const [error, setError] = useState<string>();
 
   const onClickLPSolver = useCallback(() => {
-    solveOptimizationPlacement(products, cells).then(solve => {
-      const output: Record<string, string[]> = {};
-      Object.entries(solve).forEach(([cellId, productIds]) => {
-        const cellName = getCell(cellId)?.name;
-        if (!cellName) return;
+    solveOptimizationPlacement(products, cells)
+      .then(solve => {
+        const output: Record<string, string[]> = {};
+        Object.entries(solve).forEach(([cellId, productIds]) => {
+          const cellName = getCell(cellId)?.name;
+          if (!cellName) return;
 
-        output[cellName] = productIds
-          .map(id => getProduct(id)?.name)
-          .filter(name => name) as string[];
+          output[cellName] = productIds
+            .map(id => getProduct(id)?.name)
+            .filter(name => name) as string[];
+        });
+
+        setError(undefined);
+        setOutput(output);
+      })
+      .catch((error: Error) => {
+        setError(error.message);
       });
-
-      setOutput(output);
-    });
   }, [cells, getCell, getProduct, products]);
 
   const renderOutputs = useMemo(() => {
@@ -50,7 +56,13 @@ export default function PlacementComponent() {
   return (
     <div className="w-full py-2">
       <Button onClick={onClickLPSolver}>Оптимизировать расстановку</Button>
-      <div className="flex flex-row flex-wrap gap-2 py-4">{renderOutputs}</div>
+      {error ? (
+        <div className="py-3 text-2xl font-bold text-red-700">{error}</div>
+      ) : (
+        <div className="flex flex-row flex-wrap gap-2 py-4">
+          {renderOutputs}
+        </div>
+      )}
     </div>
   );
 }
