@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
 import {DEMO_DATA} from './init-data';
 import {WarehouseStore} from './types';
+import {getUUID} from './common';
 
 export const useWarehouseStore = create<WarehouseStore>()(
   persist(
@@ -10,40 +11,59 @@ export const useWarehouseStore = create<WarehouseStore>()(
       ...DEMO_DATA,
 
       // Product functions
-      addProduct: newProduct =>
+      addProduct(newProduct) {
+        const oldProducts = get().products;
         set({
-          products: [
-            ...get().products,
-            {...newProduct, id: `prod-${crypto.randomUUID()}`},
-          ],
-        }),
-      updateProduct: (id, updatedProduct) =>
-        set({
-          products: get().products.map(product =>
-            product.id === id ? {...updatedProduct, id} : product
-          ),
-        }),
-      removeProduct: id =>
-        set({products: get().products.filter(product => product.id !== id)}),
-      getProduct: id => get().products.find(product => product.id === id),
+          products: oldProducts.concat({...newProduct, id: getUUID('prod')}),
+        });
+        get().resetPlacement();
+      },
+      updateProduct(id, updatedProduct) {
+        const newProducts = get().products.map(product =>
+          product.id === id ? {...updatedProduct, id} : product
+        );
+        set({products: newProducts});
+        get().resetPlacement();
+      },
+      removeProduct(id) {
+        const newProducts = get().products.filter(product => product.id !== id);
+        set({products: newProducts});
+        get().resetPlacement();
+      },
+      getProduct(id) {
+        return get().products.find(product => product.id === id);
+      },
 
       // Cells functions
-      addCell: newCell =>
-        set({
-          cells: [
-            ...get().cells,
-            {...newCell, id: `cell-${crypto.randomUUID()}`},
-          ],
-        }),
-      updateCell: (id, updatedCell) =>
-        set({
-          cells: get().cells.map(cell =>
-            cell.id === id ? {...updatedCell, id} : cell
-          ),
-        }),
-      removeCell: id =>
-        set({cells: get().cells.filter(cell => cell.id !== id)}),
-      getCell: id => get().cells.find(cell => cell.id === id),
+      addCell(newCell) {
+        const oldCells = get().cells;
+        set({cells: oldCells.concat({...newCell, id: getUUID('cell')})});
+        get().resetPlacement();
+      },
+      updateCell(id, updatedCell) {
+        const newCells = get().cells.map(cell =>
+          cell.id === id ? {...updatedCell, id} : cell
+        );
+        set({cells: newCells});
+        get().resetPlacement();
+      },
+      removeCell(id) {
+        const newCells = get().cells.filter(cell => cell.id !== id);
+        set({cells: newCells});
+        get().resetPlacement();
+      },
+      getCell(id) {
+        return get().cells.find(cell => cell.id === id);
+      },
+
+      // Placement functions
+      placement: null,
+      setPlacement(placement) {
+        set({placement: placement});
+      },
+      resetPlacement() {
+        set({placement: null});
+      },
     }),
     {
       name: 'warehouse-params',
