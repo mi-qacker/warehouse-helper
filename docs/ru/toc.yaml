@@ -4,3 +4,5 @@ items:
     href: pages/technical-solution.md
   - name: План реализации
     href: pages/implementation-plan.md
+  - name: Генетический алгоритм для оптимизации
+    href: pages/genetic-optimization.md

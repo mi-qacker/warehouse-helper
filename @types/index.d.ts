@@ -89,5 +89,5 @@ declare module 'genetic-js' {
   const Optimize: OptimizeType;
   function Clone<T>(obj: T): T;
 
-  export {create, Select1, Select2, Optimize, Clone};
+  export {create, Select1, Select2, Optimize, Clone, Genetic};
 }
