@@ -23,7 +23,8 @@ export default forwardRef(function Button(
       className={clsx(
         'cursor-pointer rounded-md px-3 py-2 font-semibold text-white shadow-inner',
         'focus:outline-none',
-        colorClasses[color]
+        colorClasses[color],
+        'disabled:cursor-auto disabled:bg-gray-400'
       )}
       ref={ref}
       {...buttonProps}

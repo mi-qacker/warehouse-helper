@@ -3,16 +3,19 @@
 import {solveOptimizationRoute} from '@/modules/genetic-algorithm';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
-import {useCallback} from 'react';
+import Link from 'next/link';
+import {useCallback, useMemo} from 'react';
 
 export default function TrailPage() {
   const placement = useWarehouseStore(store => store.placement);
+
   const cells = useWarehouseStore(store => store.cells);
   const setRoute = useWarehouseStore(store => store.setRoute);
 
+  const buttonDisabled = useMemo(() => placement === null, [placement]);
+
   const onClickButton = useCallback(async () => {
     if (!placement) {
-      alert('No placement'); // FIXME: show error in UI
       return;
     }
     const cellIDs = Object.keys(placement);
@@ -26,8 +29,22 @@ export default function TrailPage() {
       <h1 className="my-2 text-3xl font-bold">Trail page</h1>
       <div className="flex flex-row justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Button onClick={onClickButton}>Solve Route</Button>
-          <RouteViewComponent />
+          <Button onClick={onClickButton} disabled={buttonDisabled}>
+            Solve Route
+          </Button>
+          {placement === null ? (
+            <div>
+              No placement info.
+              <Link
+                href="/placement"
+                className="text-blue-600 hover:text-blue-800 hover:underline"
+              >
+                Get optimized placement!
+              </Link>
+            </div>
+          ) : (
+            <RouteViewComponent />
+          )}
         </div>
       </div>
     </main>
