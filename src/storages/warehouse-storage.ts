@@ -64,13 +64,14 @@ export const useWarehouseStore = create<WarehouseStore>()(
 
       // Route functions
       route: null,
-      setRoute(route) {
-        set({route});
+      distance: null,
+      setRoute(route, distance) {
+        set({route, distance});
       },
 
       // Reset optimizations
       resetOptimizations() {
-        set({placement: null, route: null});
+        set({placement: null, distance: null, route: null});
       },
     }),
     {

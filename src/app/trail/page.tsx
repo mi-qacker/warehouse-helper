@@ -1,17 +1,14 @@
 'use client';
 
 import {solveOptimizationRoute} from '@/modules/genetic-algorithm';
-import {Cell} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
-import {useCallback, useState} from 'react';
+import {useCallback} from 'react';
 
 export default function TrailPage() {
   const placement = useWarehouseStore(store => store.placement);
   const cells = useWarehouseStore(store => store.cells);
-
-  const [distance, setDistance] = useState<null | number>(null);
-  const [route, setRoute] = useState<Cell[] | null>(null);
+  const setRoute = useWarehouseStore(store => store.setRoute);
 
   const onClickButton = useCallback(async () => {
     if (!placement) {
@@ -21,34 +18,8 @@ export default function TrailPage() {
     const cellIDs = Object.keys(placement);
     const cellsForRoute = cells.filter(cell => cellIDs.includes(cell.id));
     const solution = await solveOptimizationRoute(cellsForRoute, {x: 0, y: 0}); // FIXME: startPoint add in WAREHOUSEHELPER-10
-    setDistance(solution.distance);
-    setRoute(solution.route);
-  }, [placement, cells]);
-
-  const renderDistance = () => {
-    if (distance === null) return null;
-    return <div>Distance: {distance.toFixed(2)} meters</div>;
-  };
-
-  const renderRoute = () => {
-    if (route === null) return null;
-    return (
-      <div className="flex flex-row gap-4">
-        {route.map(cell => (
-          <div
-            key={cell.id}
-            className="flex flex-col gap-0.5 rounded-sm border p-2"
-          >
-            <span className="text-sm font-semibold">{cell.name}</span>
-            <span className="text-xs text-gray-500">{cell.id}</span>
-            <span className="text-sm">
-              ({cell.position.x}, {cell.position.y})
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  };
+    setRoute(solution.route, solution.distance);
+  }, [placement, cells, setRoute]);
 
   return (
     <main className="mx-auto w-full max-w-7xl">
@@ -56,10 +27,34 @@ export default function TrailPage() {
       <div className="flex flex-row justify-center">
         <div className="flex flex-col items-center gap-4">
           <Button onClick={onClickButton}>Solve Route</Button>
-          {renderDistance()}
-          {renderRoute()}
+          <RouteViewComponent />
         </div>
       </div>
     </main>
+  );
+}
+
+function RouteViewComponent() {
+  const route = useWarehouseStore(store => store.route);
+  const distance = useWarehouseStore(store => store.distance);
+
+  if (route === null || distance === null) {
+    return <div>Build route by button</div>;
+  }
+  return (
+    <div>
+      <div className="flex w-full flex-row gap-2">
+        {route.map(point => (
+          <div key={point.id} className="grow rounded-sm border p-2 text-sm">
+            <div className="font-semibold">{point.name}</div>
+            <div className="text-xs text-gray-500">{point.id}</div>
+            <div>
+              ({point.position.x}, {point.position.y})
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>Distance: {distance.toFixed(2)} meters</div>
+    </div>
   );
 }

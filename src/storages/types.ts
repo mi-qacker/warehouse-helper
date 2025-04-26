@@ -41,7 +41,8 @@ export type WarehouseStore = {
   setPlacement: (placement: Placement) => void;
 
   route: Route | null;
-  setRoute: (route: Route) => void;
+  distance: number | null;
+  setRoute: (route: Route, distance: number) => void;
 
   resetOptimizations: () => void;
 };
