@@ -1,7 +1,9 @@
+import WarehouseForm from '@/features/params/warehouse/WarehouseParams';
+
 export default function WarehousePage() {
   return (
     <main>
-      <h1>Warehouse params</h1>
+      <WarehouseForm />
     </main>
   );
 }

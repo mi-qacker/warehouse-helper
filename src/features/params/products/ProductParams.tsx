@@ -165,20 +165,18 @@ export default function ProductForm() {
 
   return (
     <div className="space-y-4 rounded-lg p-4">
-      <Input
-        label="Название"
-        type="text"
-        value={formData.name}
-        onChange={onNameChange}
-      />
+      <Input type="text" value={formData.name} onChange={onNameChange}>
+        Название
+      </Input>
 
       <Input
-        label="Объём (м³)"
         type="number"
         min="0"
         value={formData.volume}
         onChange={onVolumeChange}
-      />
+      >
+        Объём (м³)
+      </Input>
 
       <Select
         label="Условия хранения"

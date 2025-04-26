@@ -127,20 +127,18 @@ export default function CellForm() {
 
   return (
     <div className="space-y-4 rounded-lg p-4">
-      <Input
-        label="Название"
-        type="text"
-        value={formData.name}
-        onChange={onNameChange}
-      />
+      <Input type="text" value={formData.name} onChange={onNameChange}>
+        Название
+      </Input>
 
       <Input
         type="number"
         min="0"
         value={formData.capacity}
-        label="Вместимость (м³)"
         onChange={onChangeCapacity}
-      />
+      >
+        Вместимость (м³)
+      </Input>
 
       <Select
         options={ZONE_CONDITION_OPTIONS}
@@ -155,17 +153,19 @@ export default function CellForm() {
           type="number"
           min="0"
           value={formData.position.x}
-          label="Координата X"
           onChange={onPositionXChange}
-        />
+        >
+          Координата X
+        </Input>
 
         <Input
           type="number"
           min="0"
           value={formData.position.y}
-          label="Координата Y"
           onChange={onPositionYChange}
-        />
+        >
+          Координата Y
+        </Input>
       </div>
 
       <Button type="button" onClick={handleSubmit}>
