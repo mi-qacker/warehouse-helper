@@ -23,6 +23,7 @@ export type NewCell = New<Cell>;
 export type Placement = {
   [cellId: Cell['id']]: Array<Product['id']>;
 };
+export type Route = Cell[];
 export type WarehouseStore = {
   products: Product[];
   addProduct: (product: NewProduct) => void;
@@ -38,5 +39,9 @@ export type WarehouseStore = {
 
   placement: Placement | null;
   setPlacement: (placement: Placement) => void;
-  resetPlacement: () => void;
+
+  route: Route | null;
+  setRoute: (route: Route) => void;
+
+  resetOptimizations: () => void;
 };

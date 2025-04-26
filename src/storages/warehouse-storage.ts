@@ -16,19 +16,19 @@ export const useWarehouseStore = create<WarehouseStore>()(
         set({
           products: oldProducts.concat({...newProduct, id: getUUID('prod')}),
         });
-        get().resetPlacement();
+        get().resetOptimizations();
       },
       updateProduct(id, updatedProduct) {
         const newProducts = get().products.map(product =>
           product.id === id ? {...updatedProduct, id} : product
         );
         set({products: newProducts});
-        get().resetPlacement();
+        get().resetOptimizations();
       },
       removeProduct(id) {
         const newProducts = get().products.filter(product => product.id !== id);
         set({products: newProducts});
-        get().resetPlacement();
+        get().resetOptimizations();
       },
       getProduct(id) {
         return get().products.find(product => product.id === id);
@@ -38,19 +38,19 @@ export const useWarehouseStore = create<WarehouseStore>()(
       addCell(newCell) {
         const oldCells = get().cells;
         set({cells: oldCells.concat({...newCell, id: getUUID('cell')})});
-        get().resetPlacement();
+        get().resetOptimizations();
       },
       updateCell(id, updatedCell) {
         const newCells = get().cells.map(cell =>
           cell.id === id ? {...updatedCell, id} : cell
         );
         set({cells: newCells});
-        get().resetPlacement();
+        get().resetOptimizations();
       },
       removeCell(id) {
         const newCells = get().cells.filter(cell => cell.id !== id);
         set({cells: newCells});
-        get().resetPlacement();
+        get().resetOptimizations();
       },
       getCell(id) {
         return get().cells.find(cell => cell.id === id);
@@ -59,10 +59,18 @@ export const useWarehouseStore = create<WarehouseStore>()(
       // Placement functions
       placement: null,
       setPlacement(placement) {
-        set({placement: placement});
+        set({placement});
       },
-      resetPlacement() {
-        set({placement: null});
+
+      // Route functions
+      route: null,
+      setRoute(route) {
+        set({route});
+      },
+
+      // Reset optimizations
+      resetOptimizations() {
+        set({placement: null, route: null});
       },
     }),
     {
