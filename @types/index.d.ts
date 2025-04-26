@@ -17,27 +17,30 @@ declare module 'genetic-js' {
   }
 
   type SelectFn<T> = (pop: Array<{fitness: number; entity: T}>) => T;
-  interface Select1Type<T> {
-    Tournament2: SelectFn<T>;
-    Tournament3: SelectFn<T>;
-    Fittest: SelectFn<T>;
-    Random: SelectFn<T>;
-    RandomLinearRank: SelectFn<T>;
-    Sequential: SelectFn<T>;
+  interface Select1Type {
+    Tournament2: SelectFn;
+    Tournament3: SelectFn;
+    Fittest: SelectFn;
+    Random: SelectFn;
+    RandomLinearRank: SelectFn;
+    Sequential: SelectFn;
   }
 
   type Select2Fn<T> = (pop: Array<{fitness: number; entity: T}>) => [T, T];
-  interface Select2Type<T> {
-    Tournament2: Select2Fn<T>;
-    Tournament3: Select2Fn<T>;
-    Random: Select2Fn<T>;
-    RandomLinearRank: Select2Fn<T>;
-    Sequential: Select2Fn<T>;
-    FittestRandom: Select2Fn<T>;
+  interface Select2Type {
+    Tournament2: Select2Fn;
+    Tournament3: Select2Fn;
+    Random: Select2Fn;
+    RandomLinearRank: Select2Fn;
+    Sequential: Select2Fn;
+    FittestRandom: Select2Fn;
   }
 
   type NotificationCallback<T> = (
-    pop: T[],
+    pop: {
+      fitness: number;
+      entity: T;
+    }[],
     generation: number,
     stats: {
       maximum: number;
@@ -59,33 +62,33 @@ declare module 'genetic-js' {
     }
   ) => boolean | void;
 
-  interface Genetic<T = unknown> {
-    fitness: (entity: T) => number;
-    seed: () => T;
-    mutate?: (entity: T) => T;
-    crossover?: (parent1: T, parent2: T) => [T, T];
-    select1: SelectFn<T>;
-    select2: Select2Fn<T>;
+  interface Genetic<
+    TEntity extends object = unknown,
+    TUserData extends object = unknown,
+  > {
+    fitness: (entity: TEntity) => number;
+    seed: () => TEntity;
+    mutate?: (entity: TEntity) => TEntity;
+    crossover?: (parent1: TEntity, parent2: TEntity) => [TEntity, TEntity];
+    select1: SelectFn<TEntity>;
+    select2: Select2Fn<TEntity>;
     optimize: OptimizeFn;
-    generation?: GenerationCallback<T>;
-    notification?: NotificationCallback<T>;
+    generation?: GenerationCallback<TEntity>;
+    notification?: NotificationCallback<TEntity>;
 
     configuration: GeneticConfiguration;
-    userData: Record<string, unknown>;
+    userData: TUserData;
     internalGenState: Record<string, unknown>;
-    entities: T[];
+    entities: TEntity[];
 
     start(): void;
-    evolve(
-      config: Partial<GeneticConfiguration>,
-      userData?: Record<string, unknown>
-    ): void;
+    evolve(config: Partial<GeneticConfiguration>, userData?: TUserData): void;
   }
 
-  function create<T = unknown>(): Genetic<T>;
+  function create<T, U>(): Genetic<T, U>;
 
-  const Select1: Select1Type<unknown>;
-  const Select2: Select2Type<unknown>;
+  const Select1: Select1Type;
+  const Select2: Select2Type;
   const Optimize: OptimizeType;
   function Clone<T>(obj: T): T;
 
