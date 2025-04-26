@@ -1,6 +1,13 @@
 import {WarehouseStore} from './types';
 
-export const DEMO_DATA: Pick<WarehouseStore, `products` | `cells`> = {
+export const DEMO_DATA: Pick<
+  WarehouseStore,
+  'warehouse' | 'products' | 'cells'
+> = {
+  warehouse: {
+    width: 30,
+    height: 20,
+  },
   cells: [
     {
       id: `cell-${1}`,

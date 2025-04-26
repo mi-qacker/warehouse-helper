@@ -1,3 +1,7 @@
+export type Warehouse = {
+  width: number;
+  height: number;
+};
 export type ZoneCondition = 'cold' | 'dry' | 'normal';
 export type Position = {
   x: number;
@@ -25,6 +29,9 @@ export type Placement = {
 };
 export type Route = Cell[];
 export type WarehouseStore = {
+  warehouse: Warehouse;
+  setWarehouse: (warehouse: Warehouse) => void;
+
   products: Product[];
   addProduct: (product: NewProduct) => void;
   updateProduct: (id: string, product: NewProduct) => void;
