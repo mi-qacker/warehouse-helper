@@ -1,40 +1,58 @@
 'use client';
 
 import {useWarehouseStore} from '@/storages/warehouse-storage';
-import {useForm, SubmitHandler} from 'react-hook-form';
 import Button from '@/ui/Button';
+import Input from '@/ui/Input';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useForm} from 'react-hook-form';
+import {z} from 'zod';
 
-type WarehouseInputs = {
-  width: number;
-  height: number;
-};
+const schema = z
+  .object({
+    width: z.coerce.number().positive(),
+    height: z.coerce.number().positive(),
+  })
+  .required();
 
 export default function WarehouseForm() {
   const warehouse = useWarehouseStore(store => store.warehouse);
+  const setWarehouse = useWarehouseStore(store => store.setWarehouse);
+
   const {
     register,
     handleSubmit,
-    formState: {errors},
-  } = useForm<WarehouseInputs>({values: warehouse});
+    formState: {errors, isSubmitSuccessful, isDirty},
+  } = useForm({
+    values: warehouse,
+    resolver: zodResolver(schema),
+  });
 
-  const onSubmit: SubmitHandler<WarehouseInputs> = data =>
-    console.log('onSubmit', data);
+  const onSubmit = handleSubmit(warehouseParams => {
+    setWarehouse({...warehouseParams});
+  });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-      <div className="flex flex-col">
-        <label>Width</label>
-        <input {...register('width', {required: true})} type="number" />
-        {errors.width && <span>Height field is required</span>}
+    <form onSubmit={onSubmit} className="flex flex-col gap-4 p-6">
+      <div className="flex flex-col gap-1">
+        <Input {...register('width')} type="number">
+          Ширина
+        </Input>
+        <span className="text-sm text-red-500">{errors.width?.message}</span>
       </div>
 
-      <div className="flex flex-col">
-        <label>Height</label>
-        <input {...register('height', {required: true})} type="number" />
-        {errors.height && <span>Width field is required</span>}
+      <div className="flex flex-col gap-1">
+        <Input {...register('height')} type="number">
+          Длина
+        </Input>
+        <span className="text-sm text-red-500">{errors.height?.message}</span>
       </div>
 
-      <Button type="submit">Сохранить</Button>
+      <Button type="submit">Save</Button>
+      {isSubmitSuccessful && !isDirty && (
+        <div className="tex-sm text-center font-semibold text-green-600">
+          Success saved!
+        </div>
+      )}
     </form>
   );
 }
