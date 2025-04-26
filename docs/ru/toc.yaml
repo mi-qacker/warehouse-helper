@@ -1,6 +1,6 @@
 title: Документация
 items:
   - name: Техническое решение
-    href: technical-solution.md
+    href: pages/technical-solution.md
   - name: План реализации
-    href: implementation-plan.md
+    href: pages/implementation-plan.md

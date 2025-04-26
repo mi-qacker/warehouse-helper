@@ -11,7 +11,8 @@
     "lint": "next lint",
     "lint:prettier": "prettier . --check",
     "lint:prettier:fix": "prettier . --write",
-    "lint:stylelint": "stylelint \"**/*.css\""
+    "lint:stylelint": "stylelint \"**/*.css\"",
+    "build:docs": "yfm build -i ./docs -o ./docs-html -c ./docs/.yfm"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.2",
@@ -24,6 +25,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@diplodoc/cli": "^4.57.19",
     "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.52.0",
     "@tailwindcss/postcss": "^4.1.4",
