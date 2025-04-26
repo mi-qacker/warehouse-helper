@@ -20,6 +20,10 @@ export type Cell = {
   position: Position;
 };
 export type NewCell = New<Cell>;
+export type Placement = {
+  [cellId: Cell['id']]: Array<Product['id']>;
+};
+export type Route = Cell[];
 export type WarehouseStore = {
   products: Product[];
   addProduct: (product: NewProduct) => void;
@@ -32,4 +36,13 @@ export type WarehouseStore = {
   updateCell: (id: string, cell: NewCell) => void;
   removeCell: (id: string) => void;
   getCell: (id: string) => Cell | undefined;
+
+  placement: Placement | null;
+  setPlacement: (placement: Placement) => void;
+  resetPlacement: () => void;
+
+  route: Route | null;
+  distance: number | null;
+  setRoute: (route: Route, distance: number) => void;
+  resetRoute: () => void;
 };
