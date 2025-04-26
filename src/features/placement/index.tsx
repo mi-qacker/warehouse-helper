@@ -9,9 +9,7 @@ export default function PlacementComponent() {
     useShallow(({products, cells}) => ({products, cells}))
   );
   const setPlacement = useWarehouseStore(store => store.setPlacement);
-  const resetOptimizations = useWarehouseStore(
-    store => store.resetOptimizations
-  );
+  const resetPlacement = useWarehouseStore(store => store.resetPlacement);
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -22,10 +20,10 @@ export default function PlacementComponent() {
         setErrorMessage(undefined);
       })
       .catch((error: Error) => {
-        resetOptimizations();
+        resetPlacement();
         setErrorMessage(error.message);
       });
-  }, [products, cells, setPlacement, resetOptimizations]);
+  }, [products, cells, setPlacement, resetPlacement]);
 
   return (
     <div className="w-full py-2">

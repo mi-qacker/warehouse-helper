@@ -16,19 +16,19 @@ export const useWarehouseStore = create<WarehouseStore>()(
         set({
           products: oldProducts.concat({...newProduct, id: getUUID('prod')}),
         });
-        get().resetOptimizations();
+        get().resetPlacement();
       },
       updateProduct(id, updatedProduct) {
         const newProducts = get().products.map(product =>
           product.id === id ? {...updatedProduct, id} : product
         );
         set({products: newProducts});
-        get().resetOptimizations();
+        get().resetPlacement();
       },
       removeProduct(id) {
         const newProducts = get().products.filter(product => product.id !== id);
         set({products: newProducts});
-        get().resetOptimizations();
+        get().resetPlacement();
       },
       getProduct(id) {
         return get().products.find(product => product.id === id);
@@ -38,19 +38,19 @@ export const useWarehouseStore = create<WarehouseStore>()(
       addCell(newCell) {
         const oldCells = get().cells;
         set({cells: oldCells.concat({...newCell, id: getUUID('cell')})});
-        get().resetOptimizations();
+        get().resetPlacement();
       },
       updateCell(id, updatedCell) {
         const newCells = get().cells.map(cell =>
           cell.id === id ? {...updatedCell, id} : cell
         );
         set({cells: newCells});
-        get().resetOptimizations();
+        get().resetPlacement();
       },
       removeCell(id) {
         const newCells = get().cells.filter(cell => cell.id !== id);
         set({cells: newCells});
-        get().resetOptimizations();
+        get().resetPlacement();
       },
       getCell(id) {
         return get().cells.find(cell => cell.id === id);
@@ -61,6 +61,10 @@ export const useWarehouseStore = create<WarehouseStore>()(
       setPlacement(placement) {
         set({placement});
       },
+      resetPlacement() {
+        set({placement: null});
+        get().resetRoute();
+      },
 
       // Route functions
       route: null,
@@ -68,10 +72,8 @@ export const useWarehouseStore = create<WarehouseStore>()(
       setRoute(route, distance) {
         set({route, distance});
       },
-
-      // Reset optimizations
-      resetOptimizations() {
-        set({placement: null, distance: null, route: null});
+      resetRoute() {
+        set({distance: null, route: null});
       },
     }),
     {
