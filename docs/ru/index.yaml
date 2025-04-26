@@ -6,4 +6,4 @@ meta:
 links:
   - title: Описание технического решения
     description: Документация веб-приложения для оптимизации размещения товаров
-    href: technical-solution.md
+    href: pages/technical-solution.md
