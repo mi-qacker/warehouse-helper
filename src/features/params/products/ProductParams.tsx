@@ -1,7 +1,7 @@
-import {NewProduct, ZoneCondition} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
 import Input from '@/ui/Input';
+import FormError from '@/ui/FormError';
 import Select from '@/ui/Select';
 import {
   Disclosure,
@@ -15,74 +15,47 @@ import {
   ListboxOptions,
 } from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon} from '@heroicons/react/20/solid';
-import React, {useCallback, useMemo, useState} from 'react';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useCallback, useMemo, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {z} from 'zod';
 import {ZONE_CONDITION_OPTIONS} from '../common';
 import {ProductCard} from './ProductCard';
 
-const INITIAL_FORM_DATA: NewProduct = {
-  volume: 0,
-  name: '',
-  storageCondition: 'normal',
-  incompatibleWith: [],
-};
+const schema = z.object({
+  name: z.string().nonempty(),
+  volume: z.coerce.number().positive(),
+  storageCondition: z.enum(['cold', 'dry', 'normal']),
+  incompatibleWith: z.coerce.string().array(),
+});
 
 export default function ProductForm() {
-  const products = useWarehouseStore(state => state.products);
-  const addProduct = useWarehouseStore(state => state.addProduct);
-  const getProduct = useWarehouseStore(state => state.getProduct);
-  const updateProduct = useWarehouseStore(state => state.updateProduct);
-  const removeProduct = useWarehouseStore(state => state.removeProduct);
+  const {products, addProduct, updateProduct, getProduct, removeProduct} =
+    useWarehouseStore();
 
-  const [formData, setFormData] = useState<NewProduct>(INITIAL_FORM_DATA);
+  const {
+    watch,
+    register,
+    setValue,
+    reset,
+    handleSubmit,
+    formState: {errors, isSubmitSuccessful, isDirty},
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {incompatibleWith: [], volume: 0},
+  });
+  const incompatibleWithIds = watch('incompatibleWith');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-
-      if (selectedId === null) {
-        addProduct(formData);
-      } else {
-        updateProduct(selectedId, formData);
-        setSelectedId(null);
-      }
-      setFormData(INITIAL_FORM_DATA);
-    },
-    [addProduct, formData, selectedId, updateProduct]
-  );
-
-  const onNameChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
-      const name = String(event.target.value);
-      setFormData({...formData, name});
-    },
-    [formData]
-  );
-
-  const onVolumeChange: React.ChangeEventHandler<HTMLInputElement> =
-    useCallback(
-      event => {
-        const volume = Number(event.target.value);
-        setFormData({...formData, volume});
-      },
-      [formData]
-    );
-
-  const onChangeZoneCondition: React.ChangeEventHandler<HTMLSelectElement> =
-    useCallback(
-      event => {
-        const storageCondition = event.target.value as ZoneCondition;
-        setFormData({...formData, storageCondition});
-      },
-      [formData]
-    );
-
-  const onIncompatibleWithChange = useCallback(
-    (value: string[]) => {
-      setFormData({...formData, incompatibleWith: value});
-    },
-    [formData]
-  );
+  const onSubmit = handleSubmit(formData => {
+    if (selectedId) {
+      updateProduct(selectedId, formData);
+      setSelectedId(null);
+    } else {
+      addProduct(formData);
+    }
+    reset();
+  });
 
   const onDeleteProduct = useCallback(
     (productId: string) => {
@@ -97,12 +70,28 @@ export default function ProductForm() {
 
       if (!selectedProduct) return;
 
-      const {id, ...data} = selectedProduct;
-      setSelectedId(id);
-      setFormData(data);
+      reset();
+      setSelectedId(selectedProduct.id);
+      setValue('name', selectedProduct.name);
+      setValue('volume', selectedProduct.volume);
+      setValue('storageCondition', selectedProduct.storageCondition);
+      setValue('incompatibleWith', selectedProduct.incompatibleWith);
     },
-    [getProduct]
+    [getProduct, reset, setValue]
   );
+
+  const incompatibleWithOptions = useMemo(() => {
+    return products.map(product => (
+      <ListboxOption
+        key={product.id}
+        value={product.id}
+        className="group text-12 flex cursor-pointer flex-row items-center gap-2 rounded-md p-2 hover:bg-neutral-300"
+      >
+        <CheckIcon className="invisible size-4 group-data-selected:visible" />
+        <span>{product.name}</span>
+      </ListboxOption>
+    ));
+  }, [products]);
 
   const productsList = useMemo(() => {
     return products.map((product, index) => {
@@ -117,81 +106,61 @@ export default function ProductForm() {
     });
   }, [products, onSelectProduct, onDeleteProduct]);
 
-  const incompatibleWithProducts = useMemo(() => {
-    const options = products.map(product => (
-      <ListboxOption
-        key={product.id}
-        value={product.id}
-        className="group flex cursor-pointer items-center gap-2 py-1 select-none hover:font-bold"
-      >
-        <CheckIcon className="invisible size-4 group-data-[selected]:visible" />
-        <div className="text-sm">{product.name}</div>
-      </ListboxOption>
-    ));
-
-    const placeholder =
-      formData.incompatibleWith.length === 0
-        ? 'Не выбрано'
-        : products
-            .filter(({id}) => formData.incompatibleWith.includes(id))
-            .map(({name}) => name)
-            .join(', ');
-
-    return (
-      <Field>
-        <Label className="text-sm">
-          Список товаров, с которыми текущий товар несовместим
-        </Label>
-        <Listbox
-          as="div"
-          value={formData.incompatibleWith}
-          onChange={onIncompatibleWithChange}
-          multiple={true}
-        >
-          <ListboxButton className="relative flex w-full items-center justify-between rounded-lg border-2 border-neutral-200 px-2 py-2 text-left">
-            {placeholder}
-            <ChevronDownIcon className="size-4" />
-          </ListboxButton>
-          <ListboxOptions
-            anchor="bottom"
-            className="rounded-lg border-1 border-neutral-100 bg-neutral-200 px-2 py-2"
-          >
-            {options}
-          </ListboxOptions>
-        </Listbox>
-      </Field>
-    );
-  }, [formData.incompatibleWith, onIncompatibleWithChange, products]);
-
   return (
-    <div className="space-y-4 rounded-lg p-4">
-      <Input
-        label="Название"
-        type="text"
-        value={formData.name}
-        onChange={onNameChange}
-      />
+    <>
+      <form onSubmit={onSubmit} className="space-y-4 rounded-lg p-4">
+        <Input {...register('name')}>Название</Input>
+        <FormError>{errors.name?.message}</FormError>
 
-      <Input
-        label="Объём (м³)"
-        type="number"
-        min="0"
-        value={formData.volume}
-        onChange={onVolumeChange}
-      />
+        <Input {...register('volume')} type="number">
+          Объём (м³)
+        </Input>
+        <FormError>{errors.volume?.message}</FormError>
 
-      <Select
-        label="Условия хранения"
-        options={ZONE_CONDITION_OPTIONS}
-        value={formData.storageCondition}
-        onChange={onChangeZoneCondition}
-      />
+        <Select
+          options={ZONE_CONDITION_OPTIONS}
+          {...register('storageCondition')}
+        >
+          Условия хранения
+        </Select>
+        <FormError>{errors.storageCondition?.message}</FormError>
 
-      {incompatibleWithProducts}
+        <Field>
+          <input type="hidden" {...register('incompatibleWith')} />
+          <Label className="text-sm">
+            Список товаров, с которыми текущий товар несовместим
+          </Label>
+          <Listbox
+            multiple={true}
+            as="div"
+            value={incompatibleWithIds}
+            onChange={ids => setValue('incompatibleWith', ids)}
+            className="block w-full rounded-lg border-2 border-neutral-200 px-2 py-2 focus:outline-none"
+          >
+            <ListboxButton className="w-full text-left focus:outline-none">
+              {incompatibleWithIds.length === 0
+                ? 'Select from list'
+                : incompatibleWithIds.join(', ')}
+            </ListboxButton>
+            <ListboxOptions
+              anchor="bottom"
+              className="w-(--button-width) rounded-md bg-white p-2 shadow-md focus:outline-none"
+            >
+              {incompatibleWithOptions}
+            </ListboxOptions>
+          </Listbox>
+          <FormError>{errors.incompatibleWith?.message}</FormError>
+        </Field>
 
-      <Button type="button" onClick={handleSubmit}>
-        {selectedId === null ? 'Добавить товар' : 'Обновить товар'}
-      </Button>
+        <div className="flex flex-row items-center gap-4">
+          <Button type="submit">Сохранить</Button>
+          {isSubmitSuccessful && !isDirty && (
+            <div className="tex-sm text-center font-semibold text-green-600">
+              Success saved!
+            </div>
+          )}
+        </div>
+      </form>
 
       <Disclosure as="div" defaultOpen={true} className="w-full">
         <DisclosureButton className="group flex w-full items-center justify-between gap-2">
@@ -202,6 +171,6 @@ export default function ProductForm() {
           <ul className="divide-y divide-gray-200">{productsList}</ul>
         </DisclosurePanel>
       </Disclosure>
-    </div>
+    </>
   );
 }

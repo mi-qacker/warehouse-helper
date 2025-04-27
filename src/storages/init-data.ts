@@ -1,6 +1,14 @@
 import {WarehouseStore} from './types';
 
-export const DEMO_DATA: Pick<WarehouseStore, `products` | `cells`> = {
+export const DEMO_DATA: Pick<
+  WarehouseStore,
+  'warehouse' | 'products' | 'cells'
+> = {
+  warehouse: {
+    size: {width: 30, height: 20},
+    inputPosition: {x: 0, y: 0},
+    outputPosition: {x: 0, y: 0},
+  },
   cells: [
     {
       id: `cell-${1}`,
@@ -8,6 +16,7 @@ export const DEMO_DATA: Pick<WarehouseStore, `products` | `cells`> = {
       capacity: 100,
       zoneCondition: `normal`,
       position: {x: 2, y: 5},
+      size: {width: 5, height: 5},
     },
     {
       id: `cell-${2}`,
@@ -15,6 +24,7 @@ export const DEMO_DATA: Pick<WarehouseStore, `products` | `cells`> = {
       capacity: 50,
       zoneCondition: `cold`,
       position: {x: 4, y: 8},
+      size: {width: 5, height: 5},
     },
     {
       id: `cell-${3}`,
@@ -22,6 +32,7 @@ export const DEMO_DATA: Pick<WarehouseStore, `products` | `cells`> = {
       capacity: 50,
       zoneCondition: `cold`,
       position: {x: 7, y: 3},
+      size: {width: 5, height: 5},
     },
     {
       id: `cell-${4}`,
@@ -29,6 +40,7 @@ export const DEMO_DATA: Pick<WarehouseStore, `products` | `cells`> = {
       capacity: 200,
       zoneCondition: `dry`,
       position: {x: 1, y: 6},
+      size: {width: 5, height: 5},
     },
   ],
   products: [

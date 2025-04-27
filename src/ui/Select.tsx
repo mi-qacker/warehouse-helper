@@ -2,19 +2,18 @@ import {Field, Label, Select as SelectUI} from '@headlessui/react';
 import {forwardRef} from 'react';
 
 export type SelectProps = {
-  label: string;
   options: Array<
     {label: string} & React.OptionHTMLAttributes<HTMLOptionElement>
   >;
 } & React.SelectHTMLAttributes<HTMLSelectElement>;
 
 export default forwardRef(function Select(
-  {label, options, ...selectProps}: SelectProps,
+  {children, options, ...selectProps}: SelectProps,
   ref: React.ForwardedRef<HTMLSelectElement>
 ) {
   return (
     <Field className="mt-2">
-      <Label className="text-sm">{label}</Label>
+      <Label className="text-sm">{children}</Label>
       <SelectUI
         ref={ref}
         className="block w-full rounded-lg border-2 border-neutral-200 px-2 py-2 focus:outline-none"

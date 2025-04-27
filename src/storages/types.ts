@@ -1,3 +1,12 @@
+export type Size = {
+  width: number;
+  height: number;
+};
+export type Warehouse = {
+  size: Size;
+  inputPosition: Position;
+  outputPosition: Position;
+};
 export type ZoneCondition = 'cold' | 'dry' | 'normal';
 export type Position = {
   x: number;
@@ -18,6 +27,7 @@ export type Cell = {
   capacity: number;
   zoneCondition: ZoneCondition;
   position: Position;
+  size: Size;
 };
 export type NewCell = New<Cell>;
 export type Placement = {
@@ -25,6 +35,9 @@ export type Placement = {
 };
 export type Route = Cell[];
 export type WarehouseStore = {
+  warehouse: Warehouse;
+  setWarehouse: (warehouse: Warehouse) => void;
+
   products: Product[];
   addProduct: (product: NewProduct) => void;
   updateProduct: (id: string, product: NewProduct) => void;

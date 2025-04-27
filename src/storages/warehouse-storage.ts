@@ -10,6 +10,11 @@ export const useWarehouseStore = create<WarehouseStore>()(
       // Initial data
       ...DEMO_DATA,
 
+      // Warehouse function
+      setWarehouse(warehouse) {
+        set({warehouse});
+      },
+
       // Product functions
       addProduct(newProduct) {
         const oldProducts = get().products;
