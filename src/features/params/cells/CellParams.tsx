@@ -1,106 +1,71 @@
-import {NewCell, ZoneCondition} from '@/storages/types';
+import {NewCell, Position} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
+import FormError from '@/ui/FormError';
 import Input from '@/ui/Input';
 import Select from '@/ui/Select';
 import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/20/solid';
-import React, {useCallback, useMemo, useState} from 'react';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useCallback, useMemo, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {z} from 'zod';
 import {ZONE_CONDITION_OPTIONS} from '../common';
 import {CellCard} from './CellCard';
 
-const INITIAL_FORM_DATA: NewCell = {
-  name: '',
-  capacity: 0,
-  zoneCondition: 'normal',
-  position: {x: 0, y: 0},
-};
+const schema = z.object({
+  name: z.string().nonempty(),
+  capacity: z.coerce.number().positive(),
+  zoneCondition: z.enum(['cold', 'dry', 'normal']),
+  positionX: z.coerce.number().positive(),
+  positionY: z.coerce.number().positive(),
+});
 
 export default function CellForm() {
-  const cells = useWarehouseStore(state => state.cells);
-  const addCell = useWarehouseStore(state => state.addCell);
-  const updateCell = useWarehouseStore(state => state.updateCell);
-  const removeCell = useWarehouseStore(state => state.removeCell);
-  const getCell = useWarehouseStore(state => state.getCell);
+  const {cells, addCell, updateCell, removeCell, getCell} = useWarehouseStore();
 
-  const [formData, setFormData] = useState<NewCell>(INITIAL_FORM_DATA);
+  const {
+    reset,
+    handleSubmit,
+    setValue,
+    register,
+    formState: {errors, isSubmitSuccessful, isDirty},
+  } = useForm({resolver: zodResolver(schema)});
+
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const onNameChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
-      const name = String(event.target.value);
-      setFormData({...formData, name});
-    },
-    [formData]
-  );
+  const onSubmit = handleSubmit(formData => {
+    const position: Position = {x: formData.positionX, y: formData.positionY};
+    const newCell: NewCell = {
+      name: formData.name,
+      capacity: formData.capacity,
+      zoneCondition: formData.zoneCondition,
+      position,
+    };
 
-  const onPositionXChange: React.ChangeEventHandler<HTMLInputElement> =
-    useCallback(
-      event => {
-        const x = Number(event.target.value);
-        setFormData({
-          ...formData,
-          position: {...formData.position, x},
-        });
-      },
-      [formData]
-    );
-
-  const onPositionYChange: React.ChangeEventHandler<HTMLInputElement> =
-    useCallback(
-      event => {
-        const y = Number(event.target.value);
-        setFormData({
-          ...formData,
-          position: {...formData.position, y},
-        });
-      },
-      [formData]
-    );
-
-  const onChangeCapacity: React.ChangeEventHandler<HTMLInputElement> =
-    useCallback(
-      event => {
-        const capacity = Number(event.target.value);
-        setFormData({...formData, capacity});
-      },
-      [formData]
-    );
-
-  const onChangeZoneCondition: React.ChangeEventHandler<HTMLSelectElement> =
-    useCallback(
-      event => {
-        const zoneCondition = event.target.value as ZoneCondition;
-        setFormData({...formData, zoneCondition});
-      },
-      [formData]
-    );
-
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-
-      if (selectedId === null) {
-        addCell(formData);
-      } else {
-        updateCell(selectedId, formData);
-        setSelectedId(null);
-      }
-      setFormData(INITIAL_FORM_DATA);
-    },
-    [addCell, formData, selectedId, updateCell]
-  );
+    if (selectedId === null) {
+      addCell(newCell);
+    } else {
+      updateCell(selectedId, newCell);
+      setSelectedId(null);
+    }
+    reset();
+  });
 
   const onSelectCell = useCallback(
     (cellId: string) => {
       const selectedCell = getCell(cellId);
       if (!selectedCell) return;
 
-      const {id, ...data} = selectedCell;
-      setSelectedId(id);
-      setFormData(data);
+      reset();
+      setSelectedId(selectedCell.id);
+      setValue('name', selectedCell.name);
+      setValue('capacity', selectedCell.capacity);
+      setValue('zoneCondition', selectedCell.zoneCondition);
+      setValue('positionX', selectedCell.position.x);
+      setValue('positionY', selectedCell.position.y);
     },
-    [getCell]
+    [getCell, reset, setValue]
   );
 
   const onDeleteCell = useCallback(
@@ -126,51 +91,48 @@ export default function CellForm() {
   }, [cells, onDeleteCell, onSelectCell]);
 
   return (
-    <div className="space-y-4 rounded-lg p-4">
-      <Input type="text" value={formData.name} onChange={onNameChange}>
-        Название
-      </Input>
-
-      <Input
-        type="number"
-        min="0"
-        value={formData.capacity}
-        onChange={onChangeCapacity}
-      >
-        Вместимость (м³)
-      </Input>
-
-      <Select
-        options={ZONE_CONDITION_OPTIONS}
-        label="Зона хранения"
-        value={formData.zoneCondition}
-        onChange={onChangeZoneCondition}
-        name="zoneCondition"
-      />
-
-      <div className="temp grid grid-cols-2 gap-2">
-        <Input
-          type="number"
-          min="0"
-          value={formData.position.x}
-          onChange={onPositionXChange}
-        >
-          Координата X
+    <>
+      <form onSubmit={onSubmit} className="space-y-4 rounded-lg p-4">
+        <Input type="text" {...register('name')}>
+          Название
         </Input>
+        <FormError>{errors.name?.message}</FormError>
 
-        <Input
-          type="number"
-          min="0"
-          value={formData.position.y}
-          onChange={onPositionYChange}
-        >
-          Координата Y
+        <Input type="number" {...register('capacity')}>
+          Вместимость (м³)
         </Input>
-      </div>
+        <FormError>{errors.capacity?.message}</FormError>
 
-      <Button type="button" onClick={handleSubmit}>
-        {selectedId === null ? 'Добавить ячейку' : 'Обновить ячейку'}
-      </Button>
+        <Select options={ZONE_CONDITION_OPTIONS} {...register('zoneCondition')}>
+          Зона хранения
+        </Select>
+        <FormError>{errors.zoneCondition?.message}</FormError>
+
+        <div className="temp grid grid-cols-2 gap-2">
+          <span>
+            <Input type="number" {...register('positionX')}>
+              Координата X
+            </Input>
+            <FormError>{errors.positionX?.message}</FormError>
+          </span>
+
+          <span>
+            <Input type="number" {...register('positionY')}>
+              Координата Y
+            </Input>
+            <FormError>{errors.positionY?.message}</FormError>
+          </span>
+        </div>
+
+        <div className="flex flex-row items-center gap-4">
+          <Button type="submit">Сохранить</Button>
+          {isSubmitSuccessful && !isDirty && (
+            <div className="tex-sm text-center font-semibold text-green-600">
+              Success saved!
+            </div>
+          )}
+        </div>
+      </form>
 
       <Disclosure as="div" defaultOpen={true} className="w-full">
         <DisclosureButton className="group flex w-full items-center justify-between gap-2">
@@ -179,6 +141,6 @@ export default function CellForm() {
         </DisclosureButton>
         <DisclosurePanel>{cellList}</DisclosurePanel>
       </Disclosure>
-    </div>
+    </>
   );
 }

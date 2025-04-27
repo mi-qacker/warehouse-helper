@@ -23,7 +23,7 @@ import {ZONE_CONDITION_OPTIONS} from '../common';
 import {ProductCard} from './ProductCard';
 
 const schema = z.object({
-  name: z.string().min(1),
+  name: z.string().nonempty(),
   volume: z.coerce.number().positive(),
   storageCondition: z.enum(['cold', 'dry', 'normal']),
   incompatibleWith: z.coerce.string().array(),
