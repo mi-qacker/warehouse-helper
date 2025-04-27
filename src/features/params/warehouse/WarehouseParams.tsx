@@ -2,6 +2,7 @@
 
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
+import FormError from '@/ui/FormError';
 import Input from '@/ui/Input';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
@@ -37,14 +38,14 @@ export default function WarehouseForm() {
         <Input {...register('width')} type="number">
           Ширина
         </Input>
-        <span className="text-sm text-red-500">{errors.width?.message}</span>
+        <FormError>{errors.width?.message}</FormError>
       </div>
 
       <div className="flex flex-col gap-1">
         <Input {...register('height')} type="number">
           Длина
         </Input>
-        <span className="text-sm text-red-500">{errors.height?.message}</span>
+        <FormError>{errors.height?.message}</FormError>
       </div>
 
       <Button type="submit">Save</Button>
