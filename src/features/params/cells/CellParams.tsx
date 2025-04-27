@@ -17,8 +17,10 @@ const schema = z.object({
   name: z.string().nonempty(),
   capacity: z.coerce.number().positive(),
   zoneCondition: z.enum(['cold', 'dry', 'normal']),
-  positionX: z.coerce.number().positive(),
-  positionY: z.coerce.number().positive(),
+  positionX: z.coerce.number().nonnegative(),
+  positionY: z.coerce.number().nonnegative(),
+  width: z.coerce.number().positive(),
+  height: z.coerce.number().positive(),
 });
 
 export default function CellForm() {
@@ -41,6 +43,10 @@ export default function CellForm() {
       capacity: formData.capacity,
       zoneCondition: formData.zoneCondition,
       position,
+      size: {
+        width: formData.width,
+        height: formData.height,
+      },
     };
 
     if (selectedId === null) {
@@ -64,6 +70,8 @@ export default function CellForm() {
       setValue('zoneCondition', selectedCell.zoneCondition);
       setValue('positionX', selectedCell.position.x);
       setValue('positionY', selectedCell.position.y);
+      setValue('width', selectedCell.size.width);
+      setValue('height', selectedCell.size.height);
     },
     [getCell, reset, setValue]
   );
@@ -109,6 +117,9 @@ export default function CellForm() {
         <FormError>{errors.zoneCondition?.message}</FormError>
 
         <div className="temp grid grid-cols-2 gap-2">
+          <span className="col-start-1 col-end-3 text-sm font-semibold">
+            Положение ячейки
+          </span>
           <span>
             <Input type="number" {...register('positionX')}>
               Координата X
@@ -121,6 +132,25 @@ export default function CellForm() {
               Координата Y
             </Input>
             <FormError>{errors.positionY?.message}</FormError>
+          </span>
+        </div>
+
+        <div className="temp grid grid-cols-2 gap-2">
+          <span className="col-start-1 col-end-3 text-sm font-semibold">
+            Размер ячейки
+          </span>
+          <span>
+            <Input type="number" {...register('width')}>
+              Ширина
+            </Input>
+            <FormError>{errors.width?.message}</FormError>
+          </span>
+
+          <span>
+            <Input type="number" {...register('height')}>
+              Длина
+            </Input>
+            <FormError>{errors.height?.message}</FormError>
           </span>
         </div>
 

@@ -1,6 +1,11 @@
-export type Warehouse = {
+export type Size = {
   width: number;
   height: number;
+};
+export type Warehouse = {
+  size: Size;
+  inputPosition: Position;
+  outputPosition: Position;
 };
 export type ZoneCondition = 'cold' | 'dry' | 'normal';
 export type Position = {
@@ -22,6 +27,7 @@ export type Cell = {
   capacity: number;
   zoneCondition: ZoneCondition;
   position: Position;
+  size: Size;
 };
 export type NewCell = New<Cell>;
 export type Placement = {
