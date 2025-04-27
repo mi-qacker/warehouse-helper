@@ -179,11 +179,12 @@ export default function ProductForm() {
       </Input>
 
       <Select
-        label="Условия хранения"
         options={ZONE_CONDITION_OPTIONS}
         value={formData.storageCondition}
         onChange={onChangeZoneCondition}
-      />
+      >
+        Условия хранения
+      </Select>
 
       {incompatibleWithProducts}
 
