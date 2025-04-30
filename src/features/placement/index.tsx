@@ -2,15 +2,16 @@ import {solveOptimizationPlacement} from '@/modules/lp-solver';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
 import {useCallback, useState} from 'react';
+import Link from 'next/link';
 
 export default function PlacementComponent() {
   const {
     products,
     cells,
     warehouse: {inputPosition},
+    setPlacement,
+    resetPlacement,
   } = useWarehouseStore();
-  const setPlacement = useWarehouseStore(store => store.setPlacement);
-  const resetPlacement = useWarehouseStore(store => store.resetPlacement);
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -41,9 +42,7 @@ function ErrorView(props: {message: string}) {
 }
 
 function PlacementView() {
-  const placement = useWarehouseStore(store => store.placement);
-  const getCell = useWarehouseStore(store => store.getCell);
-  const getProduct = useWarehouseStore(store => store.getProduct);
+  const {placement, getCell, getProduct} = useWarehouseStore();
 
   if (!placement) {
     return null;
@@ -80,6 +79,26 @@ function PlacementView() {
   );
 
   return (
-    <div className="flex flex-row flex-wrap gap-2 py-4">{renderOutputs}</div>
+    <div>
+      <div className="flex flex-row flex-wrap gap-2 py-4">{renderOutputs}</div>
+      <div className="flex flex-col gap-2">
+        <span>
+          <Link
+            className="text-blue-600 hover:text-blue-800 hover:underline"
+            href="/map"
+          >
+            Show on Map
+          </Link>
+        </span>
+        <span>
+          <Link
+            className="text-blue-600 hover:text-blue-800 hover:underline"
+            href="/trail"
+          >
+            Build route
+          </Link>
+        </span>
+      </div>
+    </div>
   );
 }
