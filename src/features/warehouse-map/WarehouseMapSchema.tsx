@@ -1,6 +1,6 @@
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import clsx from 'clsx';
-import {useMemo} from 'react';
+import {ReactElement, useMemo} from 'react';
 
 const SVG_PADDING = 10;
 
@@ -21,6 +21,7 @@ export default function WarehouseMapSchema() {
       xmlns="http://www.w3.org/2000/svg"
     >
       <WarehouseSvgRect />
+      <TrailSvgLines />
 
       {svgCells}
 
@@ -124,4 +125,38 @@ function LoadingPointSvgCircle(props: {type: 'input' | 'output'}) {
       </text>
     </>
   );
+}
+
+function TrailSvgLines() {
+  const {
+    route,
+    warehouse: {inputPosition, outputPosition},
+  } = useWarehouseStore();
+
+  const points = useMemo(() => {
+    if (!route) return [];
+    return [inputPosition, ...route.map(cell => cell.position), outputPosition];
+  }, [inputPosition, outputPosition, route]);
+
+  const lines = useMemo(() => {
+    const linesElements: ReactElement[] = [];
+    for (let i = 1; i < points.length; i++) {
+      const point1 = points[i - 1];
+      const point2 = points[i];
+      linesElements.push(
+        <line
+          key={`${i - 1}-${i}`}
+          x1={point1.x}
+          y1={point1.y}
+          x2={point2.x}
+          y2={point2.y}
+          className="stroke-cyan-500 stroke-1"
+          strokeDasharray="4"
+        />
+      );
+    }
+    return linesElements;
+  }, [points]);
+
+  return <>{lines}</>;
 }

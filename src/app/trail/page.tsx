@@ -7,10 +7,7 @@ import Link from 'next/link';
 import {useCallback, useMemo} from 'react';
 
 export default function TrailPage() {
-  const placement = useWarehouseStore(store => store.placement);
-
-  const cells = useWarehouseStore(store => store.cells);
-  const setRoute = useWarehouseStore(store => store.setRoute);
+  const {warehouse, placement, cells, setRoute} = useWarehouseStore();
 
   const buttonDisabled = useMemo(() => placement === null, [placement]);
 
@@ -20,9 +17,19 @@ export default function TrailPage() {
     }
     const cellIDs = Object.keys(placement);
     const cellsForRoute = cells.filter(cell => cellIDs.includes(cell.id));
-    const solution = await solveOptimizationRoute(cellsForRoute, {x: 0, y: 0}); // FIXME: startPoint add in WAREHOUSEHELPER-10
+    const solution = await solveOptimizationRoute(
+      cellsForRoute,
+      warehouse.inputPosition,
+      warehouse.outputPosition
+    );
     setRoute(solution.route, solution.distance);
-  }, [placement, cells, setRoute]);
+  }, [
+    placement,
+    cells,
+    warehouse.inputPosition,
+    warehouse.outputPosition,
+    setRoute,
+  ]);
 
   return (
     <main className="mx-auto w-full max-w-7xl">
