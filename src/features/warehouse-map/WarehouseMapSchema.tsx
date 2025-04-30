@@ -46,10 +46,14 @@ export function WarehouseSvgRect() {
   );
 }
 
+const NAME_PADDING = 1;
 export function CellSvgRect(props: {cellId: string}) {
-  const {getCell} = useWarehouseStore();
+  const {placement, getProduct, getCell} = useWarehouseStore();
   const cell = getCell(props.cellId);
-  const namePadding = 1;
+
+  const productsInCell = placement?.[props.cellId]
+    .map(productId => getProduct(productId))
+    .filter(product => product !== undefined);
 
   if (!cell) {
     return null;
@@ -64,14 +68,26 @@ export function CellSvgRect(props: {cellId: string}) {
         width={cell.size.width}
         height={cell.size.height}
       />
+
       <text
-        x={cell.position.x + namePadding}
-        y={cell.position.y + namePadding}
-        className="fill-stone-900 text-xs"
+        x={cell.position.x + NAME_PADDING}
+        y={cell.position.y + NAME_PADDING}
+        className="fill-stone-900 text-[8px] font-bold"
         style={{dominantBaseline: 'hanging'}}
       >
         {cell.name}
       </text>
+
+      {productsInCell && productsInCell.length > 0 && (
+        <text
+          x={cell.position.x + NAME_PADDING}
+          y={cell.position.y + NAME_PADDING + 8}
+          className="fill-stone-600 text-[8px]"
+          style={{dominantBaseline: 'hanging'}}
+        >
+          {productsInCell.map(p => p.name).join(', ')}
+        </text>
+      )}
     </>
   );
 }
