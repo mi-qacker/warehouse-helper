@@ -13,6 +13,7 @@ export const useWarehouseStore = create<WarehouseStore>()(
       // Warehouse function
       setWarehouse(warehouse) {
         set({warehouse});
+        get().resetPlacement();
       },
 
       // Product functions
@@ -65,6 +66,7 @@ export const useWarehouseStore = create<WarehouseStore>()(
       placement: null,
       setPlacement(placement) {
         set({placement});
+        get().resetRoute();
       },
       resetPlacement() {
         set({placement: null});

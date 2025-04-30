@@ -79,6 +79,14 @@ function RouteViewComponent() {
         ))}
       </div>
       <div>Distance: {distance.toFixed(2)} meters</div>
+      <div>
+        <Link
+          className="text-blue-600 hover:text-blue-800 hover:underline"
+          href="/map"
+        >
+          Show on Map
+        </Link>
+      </div>
     </div>
   );
 }
