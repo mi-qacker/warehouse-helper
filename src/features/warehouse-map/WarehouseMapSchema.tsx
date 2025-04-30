@@ -1,4 +1,6 @@
 import {useWarehouseStore} from '@/storages/warehouse-storage';
+import clsx from 'clsx';
+import {useMemo} from 'react';
 
 const SVG_PADDING = 10;
 
@@ -19,7 +21,11 @@ export default function WarehouseMapSchema() {
       xmlns="http://www.w3.org/2000/svg"
     >
       <WarehouseSvgRect />
+
       {svgCells}
+
+      <LoadingPointSvgCircle type="input" />
+      <LoadingPointSvgCircle type="output" />
     </svg>
   );
 }
@@ -61,10 +67,44 @@ export function CellSvgRect(props: {cellId: string}) {
       <text
         x={cell.position.x + namePadding}
         y={cell.position.y + namePadding}
-        className="fill-stone-600 text-xs"
+        className="fill-stone-900 text-xs"
         style={{dominantBaseline: 'hanging'}}
       >
         {cell.name}
+      </text>
+    </>
+  );
+}
+
+function LoadingPointSvgCircle(props: {type: 'input' | 'output'}) {
+  const {
+    warehouse: {inputPosition, outputPosition},
+  } = useWarehouseStore();
+
+  const position = useMemo(
+    () => (props.type === 'input' ? inputPosition : outputPosition),
+    [inputPosition, outputPosition, props.type]
+  );
+
+  const RADIUS = 5;
+  return (
+    <>
+      <circle
+        cx={position.x}
+        cy={position.y}
+        r={RADIUS}
+        className={clsx({
+          'fill-red-700': props.type === 'input',
+          'fill-yellow-700': props.type === 'output',
+        })}
+      />
+      <text
+        x={position.x}
+        y={position.y}
+        className="fill-stone-900 text-xs"
+        style={{dominantBaseline: 'hanging'}}
+      >
+        {props.type}
       </text>
     </>
   );
