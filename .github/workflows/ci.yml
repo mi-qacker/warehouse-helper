@@ -33,14 +33,4 @@ jobs:
       - run: npm run lint
       - run: npm run lint:prettier
       - run: npm run lint:stylelint
-  validate-docs:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Build docs
-        uses: diplodoc-platform/docs-build-action@v3
-        with:
-          src-root: './docs'
-          build-root: './docs-html'
-          lint-root: './docs-lint'
+      - run: npm run build:docs

@@ -5,6 +5,7 @@ import {useMemo} from 'react';
 import {useShallow} from 'zustand/shallow';
 import {CellGridCard} from './CellGridCard';
 import {ProductGridCard} from './ProductGridCard';
+import WarehouseMapSchema from './WarehouseMapSchema';
 
 export default function WarehouseMap() {
   const {products, cells} = useWarehouseStore(
@@ -27,15 +28,19 @@ export default function WarehouseMap() {
   }, [products]);
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="container mx-auto space-y-4 py-4">
       <div>
-        <h2 className="mb-4 text-xl font-bold">Cells</h2>
+        <h2 className="mb-2 text-xl font-bold">Cells</h2>
         {cellsGrid}
       </div>
 
       <div>
-        <h2 className="mb-4 text-xl font-bold">Products</h2>
+        <h2 className="mb-2 text-xl font-bold">Products</h2>
         {productsGrid}
+      </div>
+      <div>
+        <h2 className="mb-2 text-xl font-bold">Schema</h2>
+        <WarehouseMapSchema />
       </div>
     </div>
   );

@@ -13,7 +13,8 @@ async function loadGLPK() {
 
 export async function solveOptimizationPlacement(
   products: Product[],
-  cells: Cell[]
+  cells: Cell[],
+  startPosition: Position
 ): Promise<Placement> {
   const glpk = await loadGLPK();
   const lp: LP = {
@@ -33,7 +34,7 @@ export async function solveOptimizationPlacement(
       const varName = `x_${product.id}_${cell.id}`;
       lp.objective.vars.push({
         name: varName,
-        coef: getDist({x: 1, y: 1}, cell.position),
+        coef: getDist(startPosition, cell.position),
       });
       lp.binaries?.push(varName);
     });

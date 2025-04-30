@@ -26,7 +26,8 @@ export type Solution = {
 
 export function solveOptimizationRoute(
   cells: Cell[],
-  startPoint: Position
+  startPoint: Position,
+  endPoint: Position
 ): Promise<Solution> {
   const distanceMatrix = getDistanceMatrix(cells);
   const permutations = getPermutations(cells);
@@ -37,6 +38,7 @@ export function solveOptimizationRoute(
     getRandomIndex,
     getCellsDistance,
     startPoint,
+    endPoint,
   };
 
   return loadGenetic<Cell[], typeof geneticUserData>().then(genetic => {
@@ -49,19 +51,26 @@ export function solveOptimizationRoute(
     genetic.fitness = function (entity: Cell[]) {
       const distanceMatrix = this.userData.distanceMatrix;
       let dist = 0;
-      entity.forEach((cell, i, cells) => {
-        if (!cells[i - 1]) {
+
+      for (let i = 0; i < entity.length; i++) {
+        if (!entity[i - 1]) {
           dist += this.userData.getCellsDistance(
             this.userData.startPoint,
-            cell.position
+            entity[i].position
           );
-          return;
+          continue;
         }
-        const currCellId = cell.id;
-        const prevCellId = cells[i - 1].id;
+        const currCellId = entity[i].id;
+        const prevCellId = entity[i - 1].id;
 
         dist += distanceMatrix[`${currCellId}-${prevCellId}`];
-      });
+      }
+
+      dist += this.userData.getCellsDistance(
+        entity[entity.length - 1].position,
+        this.userData.endPoint
+      );
+
       return dist;
     };
 

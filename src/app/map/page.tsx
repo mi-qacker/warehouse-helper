@@ -2,7 +2,7 @@ import WarehouseMap from '@/features/warehouse-map/WarehouseMap';
 
 export default function MapPage() {
   return (
-    <main className="mx-auto max-w-7xl">
+    <main className="overflow-y-auto">
       <WarehouseMap />
     </main>
   );
