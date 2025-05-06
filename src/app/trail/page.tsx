@@ -19,17 +19,11 @@ export default function TrailPage() {
     const cellsForRoute = cells.filter(cell => cellIDs.includes(cell.id));
     const solution = await solveOptimizationRoute(
       cellsForRoute,
-      warehouse.inputPosition,
-      warehouse.outputPosition
+      warehouse.inputPoint,
+      warehouse.outputPoint
     );
     setRoute(solution.route, solution.distance);
-  }, [
-    placement,
-    cells,
-    warehouse.inputPosition,
-    warehouse.outputPosition,
-    setRoute,
-  ]);
+  }, [placement, cells, warehouse.inputPoint, warehouse.outputPoint, setRoute]);
 
   return (
     <main className="mx-auto w-full max-w-7xl">
@@ -72,9 +66,7 @@ function RouteViewComponent() {
           <div key={point.id} className="grow rounded-sm border p-2 text-sm">
             <div className="font-semibold">{point.name}</div>
             <div className="text-xs text-gray-500">{point.id}</div>
-            <div>
-              ({point.position.x}, {point.position.y})
-            </div>
+            <div>({point.loadingPoint.geometry.coordinates.join(', ')})</div>
           </div>
         ))}
       </div>

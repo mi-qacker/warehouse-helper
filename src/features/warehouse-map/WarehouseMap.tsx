@@ -16,7 +16,7 @@ export default function WarehouseMap() {
     const cellCards = cells.map(cell => {
       return <CellGridCard key={cell.id} cell={cell} />;
     });
-    return <div className="grid grid-cols-8 gap-1">{cellCards}</div>;
+    return <div className="grid grid-cols-4 gap-1">{cellCards}</div>;
   }, [cells]);
 
   const productsGrid = useMemo(() => {
