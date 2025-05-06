@@ -6,7 +6,9 @@ const SVG_PADDING = 10;
 export default function WarehouseMapSchema() {
   const {warehouse, cells} = useWarehouseStore();
 
-  const viewBox = `-${SVG_PADDING} -${SVG_PADDING} ${warehouse.size.width + SVG_PADDING * 2} ${warehouse.size.height + SVG_PADDING * 2}`;
+  const [x0, y0, x1, y1] = warehouse.bounds;
+
+  const viewBox = `-${SVG_PADDING} -${SVG_PADDING} ${x1 - x0 + SVG_PADDING * 2} ${y1 - y0 + SVG_PADDING * 2}`;
   const svgCells = cells.map(({id}) => <CellSvgRect key={id} cellId={id} />);
 
   return (
@@ -27,17 +29,16 @@ export default function WarehouseMapSchema() {
 }
 
 export function WarehouseSvgRect() {
-  const {
-    warehouse: {size},
-  } = useWarehouseStore();
+  const {warehouse} = useWarehouseStore();
+  const [x0, y0, x1, y1] = warehouse.bounds;
 
   return (
     <rect
       className="fill-stone-100 stroke-stone-500 stroke-2"
-      x="0"
-      y="0"
-      width={size.width}
-      height={size.height}
+      x={x0}
+      y={y0}
+      width={x1 - x0}
+      height={y1 - y0}
     />
   );
 }
@@ -50,20 +51,21 @@ export function CellSvgRect(props: {cellId: string}) {
   if (!cell) {
     return null;
   }
+  const [x0, y0, x1, y1] = cell.bounds;
 
   return (
     <>
       <rect
         className="fill-blue-100 stroke-blue-500 stroke-2"
-        x={cell.position.x}
-        y={cell.position.y}
-        width={cell.size.width}
-        height={cell.size.height}
+        x={x0}
+        y={y0}
+        width={x1 - x0}
+        height={y1 - y0}
       />
 
       <text
-        x={cell.position.x + NAME_PADDING}
-        y={cell.position.y + NAME_PADDING}
+        x={x0 + NAME_PADDING}
+        y={y0 + NAME_PADDING}
         className="fill-stone-900 text-[8px] font-bold"
         style={{dominantBaseline: 'hanging'}}
       >
@@ -75,16 +77,19 @@ export function CellSvgRect(props: {cellId: string}) {
 
 function WarehouseGraphGrid() {
   const {graph, warehouse} = useWarehouseStore();
+  const [x0, y0, x1, y1] = warehouse.bounds;
+  const width = x1 - x0;
+  const height = y1 - y0;
 
   const verticalLines = useMemo(() => {
     if (!graph) return null;
     const lines = [];
 
-    for (let i = 0; i < warehouse.size.width; i += graph.size) {
+    for (let i = 0; i < width; i += graph.size) {
       const x1 = i;
       const x2 = i;
       const y1 = 0;
-      const y2 = warehouse.size.height;
+      const y2 = height;
       lines.push(
         <line
           key={`v-${i}`}
@@ -98,15 +103,15 @@ function WarehouseGraphGrid() {
       );
     }
     return lines;
-  }, [graph, warehouse.size.height, warehouse.size.width]);
+  }, [graph, height, width]);
 
   const horizontalLines = useMemo(() => {
     if (!graph) return null;
     const lines = [];
 
-    for (let i = 0; i < warehouse.size.height; i += graph.size) {
+    for (let i = 0; i < height; i += graph.size) {
       const x1 = 0;
-      const x2 = warehouse.size.width;
+      const x2 = width;
       const y1 = i;
       const y2 = i;
       lines.push(
@@ -122,7 +127,7 @@ function WarehouseGraphGrid() {
       );
     }
     return lines;
-  }, [graph, warehouse.size.height, warehouse.size.width]);
+  }, [graph, height, width]);
 
   return (
     <>
