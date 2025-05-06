@@ -14,6 +14,7 @@ export default function Navbar() {
           <NavbarLink label="Map" href="/map" />
           <NavbarLink label="Placement" href="/placement" />
           <NavbarLink label="Trail" href="/trail" />
+          <NavbarLink label="Graph" href="/graph" />
         </div>
 
         <div className="flex space-x-4">
