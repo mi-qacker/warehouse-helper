@@ -18,6 +18,7 @@
     "@headlessui/react": "^2.2.2",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.0.1",
+    "@turf/turf": "^7.2.0",
     "clsx": "^2.1.1",
     "genetic-js": "^0.1.14",
     "glpk.js": "^4.0.2",
