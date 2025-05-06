@@ -1,4 +1,5 @@
-import {Cell, Position} from '@/storages/types';
+import {Cell} from '@/storages/types';
+import {Feature, Point} from 'geojson';
 import {getPermutations} from './permutations';
 import {getCellsDistance, getDistanceMatrix} from './distance-matrix';
 import {getRandomIndex} from './random-index';
@@ -26,8 +27,8 @@ export type Solution = {
 
 export function solveOptimizationRoute(
   cells: Cell[],
-  startPoint: Position,
-  endPoint: Position
+  startPoint: Feature<Point>,
+  endPoint: Feature<Point>
 ): Promise<Solution> {
   const distanceMatrix = getDistanceMatrix(cells);
   const permutations = getPermutations(cells);
@@ -55,8 +56,8 @@ export function solveOptimizationRoute(
       for (let i = 0; i < entity.length; i++) {
         if (!entity[i - 1]) {
           dist += this.userData.getCellsDistance(
-            this.userData.startPoint,
-            entity[i].position
+            this.userData.startPoint.geometry,
+            entity[i].loadingPoint.geometry
           );
           continue;
         }
@@ -67,8 +68,8 @@ export function solveOptimizationRoute(
       }
 
       dist += this.userData.getCellsDistance(
-        entity[entity.length - 1].position,
-        this.userData.endPoint
+        entity[entity.length - 1].loadingPoint.geometry,
+        this.userData.endPoint.geometry
       );
 
       return dist;
