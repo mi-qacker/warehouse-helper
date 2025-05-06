@@ -1,14 +1,14 @@
 import {solveOptimizationPlacement} from '@/modules/lp-solver';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
-import {useCallback, useState} from 'react';
 import Link from 'next/link';
+import {useCallback, useState} from 'react';
 
 export default function PlacementComponent() {
   const {
     products,
     cells,
-    warehouse: {inputPosition},
+    warehouse: {inputPoint},
     setPlacement,
     resetPlacement,
   } = useWarehouseStore();
@@ -16,7 +16,7 @@ export default function PlacementComponent() {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const onClickLPSolver = useCallback(() => {
-    solveOptimizationPlacement(products, cells, inputPosition)
+    solveOptimizationPlacement(products, cells, inputPoint)
       .then(newPlacement => {
         setPlacement(newPlacement);
         setErrorMessage(undefined);
@@ -25,7 +25,7 @@ export default function PlacementComponent() {
         resetPlacement();
         setErrorMessage(error.message);
       });
-  }, [products, cells, inputPosition, setPlacement, resetPlacement]);
+  }, [products, cells, inputPoint, setPlacement, resetPlacement]);
 
   return (
     <div className="w-full py-2">
