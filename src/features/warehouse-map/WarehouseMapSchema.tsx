@@ -6,8 +6,9 @@ const SVG_PADDING = 10;
 
 export default function WarehouseMapSchema() {
   const {warehouse, cells} = useWarehouseStore();
+  const [x0, y0, x1, y1] = warehouse.bounds;
 
-  const viewBox = `-${SVG_PADDING} -${SVG_PADDING} ${warehouse.size.width + SVG_PADDING * 2} ${warehouse.size.height + SVG_PADDING * 2}`;
+  const viewBox = `-${SVG_PADDING} -${SVG_PADDING} ${x1 - x0 + SVG_PADDING * 2} ${y1 - y0 + SVG_PADDING * 2}`;
   const svgCells = cells.map(({id}) => <CellSvgRect key={id} cellId={id} />);
 
   return (
@@ -32,17 +33,16 @@ export default function WarehouseMapSchema() {
 }
 
 export function WarehouseSvgRect() {
-  const {
-    warehouse: {size},
-  } = useWarehouseStore();
+  const {warehouse} = useWarehouseStore();
+  const [x0, y0, x1, y1] = warehouse.bounds;
 
   return (
     <rect
       className="fill-stone-100 stroke-stone-500 stroke-2"
-      x="0"
-      y="0"
-      width={size.width}
-      height={size.height}
+      x={x0}
+      y={y0}
+      width={x1 - x0}
+      height={y1 - y0}
     />
   );
 }
@@ -60,19 +60,21 @@ export function CellSvgRect(props: {cellId: string}) {
     return null;
   }
 
+  const [x0, y0, x1, y1] = cell.bounds;
+
   return (
     <>
       <rect
         className="fill-blue-100 stroke-blue-500 stroke-2"
-        x={cell.position.x}
-        y={cell.position.y}
-        width={cell.size.width}
-        height={cell.size.height}
+        x={x0}
+        y={y0}
+        width={x1 - x0}
+        height={y1 - y0}
       />
 
       <text
-        x={cell.position.x + NAME_PADDING}
-        y={cell.position.y + NAME_PADDING}
+        x={x0 + NAME_PADDING}
+        y={y0 + NAME_PADDING}
         className="fill-stone-900 text-[8px] font-bold"
         style={{dominantBaseline: 'hanging'}}
       >
@@ -81,8 +83,8 @@ export function CellSvgRect(props: {cellId: string}) {
 
       {productsInCell && productsInCell.length > 0 && (
         <text
-          x={cell.position.x + NAME_PADDING}
-          y={cell.position.y + NAME_PADDING + 8}
+          x={x0 + NAME_PADDING}
+          y={y0 + NAME_PADDING + 8}
           className="fill-stone-600 text-[8px]"
           style={{dominantBaseline: 'hanging'}}
         >
@@ -95,20 +97,22 @@ export function CellSvgRect(props: {cellId: string}) {
 
 function LoadingPointSvgCircle(props: {type: 'input' | 'output'}) {
   const {
-    warehouse: {inputPosition, outputPosition},
+    warehouse: {inputPoint, outputPoint},
   } = useWarehouseStore();
 
   const position = useMemo(
-    () => (props.type === 'input' ? inputPosition : outputPosition),
-    [inputPosition, outputPosition, props.type]
+    () => (props.type === 'input' ? inputPoint : outputPoint),
+    [inputPoint, outputPoint, props.type]
   );
+
+  const [x, y] = position.geometry.coordinates;
 
   const RADIUS = 5;
   return (
     <>
       <circle
-        cx={position.x}
-        cy={position.y}
+        cx={x}
+        cy={y}
         r={RADIUS}
         className={clsx({
           'fill-red-700': props.type === 'input',
@@ -116,8 +120,8 @@ function LoadingPointSvgCircle(props: {type: 'input' | 'output'}) {
         })}
       />
       <text
-        x={position.x}
-        y={position.y}
+        x={x}
+        y={y}
         className="fill-stone-900 text-xs"
         style={{dominantBaseline: 'hanging'}}
       >
@@ -130,26 +134,26 @@ function LoadingPointSvgCircle(props: {type: 'input' | 'output'}) {
 function TrailSvgLines() {
   const {
     route,
-    warehouse: {inputPosition, outputPosition},
+    warehouse: {inputPoint, outputPoint},
   } = useWarehouseStore();
 
   const points = useMemo(() => {
     if (!route) return [];
-    return [inputPosition, ...route.map(cell => cell.position), outputPosition];
-  }, [inputPosition, outputPosition, route]);
+    return [inputPoint, ...route.map(cell => cell.loadingPoint), outputPoint];
+  }, [inputPoint, outputPoint, route]);
 
   const lines = useMemo(() => {
     const linesElements: ReactElement[] = [];
     for (let i = 1; i < points.length; i++) {
-      const point1 = points[i - 1];
-      const point2 = points[i];
+      const [x1, y1] = points[i - 1].geometry.coordinates;
+      const [x2, y2] = points[i].geometry.coordinates;
       linesElements.push(
         <line
           key={`${i - 1}-${i}`}
-          x1={point1.x}
-          y1={point1.y}
-          x2={point2.x}
-          y2={point2.y}
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
           className="stroke-cyan-500 stroke-1"
           strokeDasharray="4"
         />

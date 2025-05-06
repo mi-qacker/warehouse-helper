@@ -17,8 +17,9 @@ export const CellGridCard = (props: {cell: Cell}) => {
       <span className="text-sm font-semibold">{cell.name}</span>
       <span className="text-sm">Capacity: {cell.capacity} м³</span>
       <span className="text-sm">{cell.zoneCondition}</span>
+      <span className="text-sm">Bounds: {cell.bounds.join(', ')}</span>
       <span className="text-sm">
-        Position: ({cell.position.x}, {cell.position.y})
+        Position: ({cell.loadingPoint.geometry.coordinates.join(', ')})
       </span>
       <span className="text-xs text-nowrap text-gray-500" title={cell.id}>
         ID: {cell.id.slice(0, 8)}

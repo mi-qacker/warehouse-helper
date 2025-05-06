@@ -17,7 +17,7 @@ export const DEMO_DATA: Pick<
       capacity: 100,
       zoneCondition: `normal`,
       loadingPoint: point([120, 45]),
-      bounds: [120, 80, 180, 45],
+      bounds: [120, 45, 180, 80],
     },
     {
       id: `cell-${2}`,

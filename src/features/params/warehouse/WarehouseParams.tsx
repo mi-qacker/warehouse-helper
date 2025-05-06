@@ -63,7 +63,7 @@ export default function WarehouseForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Textarea {...register('inputPoint')}>Точка погрузки</Textarea>
+        <Textarea {...register('inputPoint')}>Точка разгрузки</Textarea>
         <FormError>{errors.inputPoint?.message}</FormError>
       </div>
 
