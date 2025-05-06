@@ -1,8 +1,9 @@
-import {NewCell, Position} from '@/storages/types';
+import {NewCell} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
 import FormError from '@/ui/FormError';
 import Input from '@/ui/Input';
+import Textarea from '@/ui/Textarea';
 import Select from '@/ui/Select';
 import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/20/solid';
@@ -17,10 +18,8 @@ const schema = z.object({
   name: z.string().nonempty(),
   capacity: z.coerce.number().positive(),
   zoneCondition: z.enum(['cold', 'dry', 'normal']),
-  positionX: z.coerce.number().nonnegative(),
-  positionY: z.coerce.number().nonnegative(),
-  width: z.coerce.number().positive(),
-  height: z.coerce.number().positive(),
+  loadingPoint: z.string().nonempty(),
+  bounds: z.string().nonempty(),
 });
 
 export default function CellForm() {
@@ -37,16 +36,12 @@ export default function CellForm() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const onSubmit = handleSubmit(formData => {
-    const position: Position = {x: formData.positionX, y: formData.positionY};
     const newCell: NewCell = {
       name: formData.name,
       capacity: formData.capacity,
       zoneCondition: formData.zoneCondition,
-      position,
-      size: {
-        width: formData.width,
-        height: formData.height,
-      },
+      loadingPoint: JSON.parse(formData.loadingPoint),
+      bounds: JSON.parse(formData.bounds),
     };
 
     if (selectedId === null) {
@@ -68,10 +63,8 @@ export default function CellForm() {
       setValue('name', selectedCell.name);
       setValue('capacity', selectedCell.capacity);
       setValue('zoneCondition', selectedCell.zoneCondition);
-      setValue('positionX', selectedCell.position.x);
-      setValue('positionY', selectedCell.position.y);
-      setValue('width', selectedCell.size.width);
-      setValue('height', selectedCell.size.height);
+      setValue('loadingPoint', JSON.stringify(selectedCell.loadingPoint));
+      setValue('bounds', JSON.stringify(selectedCell.bounds));
     },
     [getCell, reset, setValue]
   );
@@ -116,42 +109,14 @@ export default function CellForm() {
         </Select>
         <FormError>{errors.zoneCondition?.message}</FormError>
 
-        <div className="temp grid grid-cols-2 gap-2">
-          <span className="col-start-1 col-end-3 text-sm font-semibold">
-            Положение ячейки
-          </span>
-          <span>
-            <Input type="number" {...register('positionX')}>
-              Координата X
-            </Input>
-            <FormError>{errors.positionX?.message}</FormError>
-          </span>
-
-          <span>
-            <Input type="number" {...register('positionY')}>
-              Координата Y
-            </Input>
-            <FormError>{errors.positionY?.message}</FormError>
-          </span>
+        <div className="flex flex-col gap-2">
+          <Textarea {...register('loadingPoint')}>Точка погрузки</Textarea>
+          <FormError>{errors.loadingPoint?.message}</FormError>
         </div>
 
-        <div className="temp grid grid-cols-2 gap-2">
-          <span className="col-start-1 col-end-3 text-sm font-semibold">
-            Размер ячейки
-          </span>
-          <span>
-            <Input type="number" {...register('width')}>
-              Ширина
-            </Input>
-            <FormError>{errors.width?.message}</FormError>
-          </span>
-
-          <span>
-            <Input type="number" {...register('height')}>
-              Длина
-            </Input>
-            <FormError>{errors.height?.message}</FormError>
-          </span>
+        <div className="flex flex-col gap-2">
+          <Textarea {...register('bounds')}>Местоположение</Textarea>
+          <FormError>{errors.bounds?.message}</FormError>
         </div>
 
         <div className="flex flex-row items-center gap-4">

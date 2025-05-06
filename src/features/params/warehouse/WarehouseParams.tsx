@@ -1,9 +1,11 @@
 'use client';
 
+import {Warehouse} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Button from '@/ui/Button';
 import FormError from '@/ui/FormError';
 import Input from '@/ui/Input';
+import Textarea from '@/ui/Textarea';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
@@ -12,10 +14,8 @@ const schema = z
   .object({
     width: z.coerce.number().positive(),
     height: z.coerce.number().positive(),
-    inputPositionX: z.coerce.number().nonnegative(),
-    inputPositionY: z.coerce.number().nonnegative(),
-    outputPositionX: z.coerce.number().nonnegative(),
-    outputPositionY: z.coerce.number().nonnegative(),
+    inputPoint: z.string().nonempty(),
+    outputPoint: z.string().nonempty(),
   })
   .required();
 
@@ -29,30 +29,19 @@ export default function WarehouseForm() {
     formState: {errors, isSubmitSuccessful, isDirty},
   } = useForm({
     values: {
-      width: warehouse.size.width,
-      height: warehouse.size.height,
-      inputPositionX: warehouse.inputPosition.x,
-      inputPositionY: warehouse.inputPosition.y,
-      outputPositionX: warehouse.outputPosition.x,
-      outputPositionY: warehouse.outputPosition.y,
+      width: warehouse.bounds[2],
+      height: warehouse.bounds[3],
+      inputPoint: JSON.stringify(warehouse.inputPoint),
+      outputPoint: JSON.stringify(warehouse.outputPoint),
     },
     resolver: zodResolver(schema),
   });
 
   const onSubmit = handleSubmit(warehouseParams => {
-    const newWarehouseParams = {
-      size: {
-        width: warehouseParams.width,
-        height: warehouseParams.height,
-      },
-      inputPosition: {
-        x: warehouseParams.inputPositionX,
-        y: warehouseParams.inputPositionY,
-      },
-      outputPosition: {
-        x: warehouseParams.outputPositionX,
-        y: warehouseParams.outputPositionY,
-      },
+    const newWarehouseParams: Warehouse = {
+      bounds: [0, 0, warehouseParams.width, warehouseParams.height],
+      inputPoint: JSON.parse(warehouseParams.inputPoint),
+      outputPoint: JSON.parse(warehouseParams.outputPoint),
     };
     setWarehouse(newWarehouseParams);
   });
@@ -73,40 +62,14 @@ export default function WarehouseForm() {
         <FormError>{errors.height?.message}</FormError>
       </div>
 
-      <div className="temp grid grid-cols-2 gap-2">
-        <span className="col-start-1 col-end-3 text-sm font-semibold">
-          Точка погрузки
-        </span>
-        <span>
-          <Input type="number" {...register('inputPositionX')}>
-            Координата X
-          </Input>
-          <FormError>{errors.inputPositionX?.message}</FormError>
-        </span>
-        <span>
-          <Input type="number" {...register('inputPositionY')}>
-            Координата Y
-          </Input>
-          <FormError>{errors.inputPositionY?.message}</FormError>
-        </span>
+      <div className="flex flex-col gap-2">
+        <Textarea {...register('inputPoint')}>Точка погрузки</Textarea>
+        <FormError>{errors.inputPoint?.message}</FormError>
       </div>
 
-      <div className="temp grid grid-cols-2 gap-2">
-        <span className="col-start-1 col-end-3 text-sm font-semibold">
-          Точка разгрузки
-        </span>
-        <span>
-          <Input type="number" {...register('outputPositionX')}>
-            Координата X
-          </Input>
-          <FormError>{errors.outputPositionX?.message}</FormError>
-        </span>
-        <span>
-          <Input type="number" {...register('outputPositionY')}>
-            Координата Y
-          </Input>
-          <FormError>{errors.outputPositionY?.message}</FormError>
-        </span>
+      <div className="flex flex-col gap-2">
+        <Textarea {...register('outputPoint')}>Точка погрузки</Textarea>
+        <FormError>{errors.outputPoint?.message}</FormError>
       </div>
 
       <Button type="submit">Save</Button>
