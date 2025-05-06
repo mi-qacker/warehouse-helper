@@ -1,13 +1,14 @@
 import {WarehouseStore} from './types';
+import {point} from '@turf/turf';
 
 export const DEMO_DATA: Pick<
   WarehouseStore,
   'warehouse' | 'products' | 'cells'
 > = {
   warehouse: {
-    size: {width: 350, height: 250},
-    inputPosition: {x: 0, y: 0},
-    outputPosition: {x: 0, y: 0},
+    bounds: [0, 0, 350, 250],
+    inputPoint: point([0, 0]),
+    outputPoint: point([0, 0]),
   },
   cells: [
     {
@@ -15,32 +16,32 @@ export const DEMO_DATA: Pick<
       name: `A1`,
       capacity: 100,
       zoneCondition: `normal`,
-      position: {x: 120, y: 45},
-      size: {width: 60, height: 40},
+      loadingPoint: point([120, 45]),
+      bounds: [120, 80, 180, 45],
     },
     {
       id: `cell-${2}`,
       name: `B2`,
       capacity: 50,
       zoneCondition: `cold`,
-      position: {x: 240, y: 45},
-      size: {width: 50, height: 35},
+      loadingPoint: point([240, 45]),
+      bounds: [240, 45, 290, 90],
     },
     {
       id: `cell-${3}`,
       name: `B3`,
       capacity: 50,
       zoneCondition: `cold`,
-      position: {x: 70, y: 120},
-      size: {width: 45, height: 50},
+      loadingPoint: point([70, 120]),
+      bounds: [70, 120, 100, 170],
     },
     {
       id: `cell-${4}`,
       name: `C4`,
       capacity: 200,
       zoneCondition: `dry`,
-      position: {x: 180, y: 120},
-      size: {width: 70, height: 50},
+      loadingPoint: point([180, 120]),
+      bounds: [180, 120, 250, 170],
     },
   ],
   products: [

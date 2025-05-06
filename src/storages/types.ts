@@ -1,18 +1,14 @@
-export type Size = {
-  width: number;
-  height: number;
-};
-export type Warehouse = {
-  size: Size;
-  inputPosition: Position;
-  outputPosition: Position;
-};
-export type ZoneCondition = 'cold' | 'dry' | 'normal';
-export type Position = {
-  x: number;
-  y: number;
-};
+import type {Point, BBox, Feature} from 'geojson';
+
 export type New<T extends {id: string}> = Omit<T, 'id'>;
+
+export type Warehouse = {
+  bounds: BBox;
+  inputPoint: Feature<Point>;
+  outputPoint: Feature<Point>;
+};
+
+export type ZoneCondition = 'cold' | 'dry' | 'normal';
 export type Product = {
   id: string;
   name: string;
@@ -21,19 +17,22 @@ export type Product = {
   incompatibleWith: string[];
 };
 export type NewProduct = New<Product>;
+
 export type Cell = {
   id: string;
   name: string;
   capacity: number;
   zoneCondition: ZoneCondition;
-  position: Position;
-  size: Size;
+  bounds: BBox;
+  loadingPoint: Feature<Point>;
 };
 export type NewCell = New<Cell>;
+
 export type Placement = {
   [cellId: Cell['id']]: Array<Product['id']>;
 };
 export type Route = Cell[];
+
 export type WarehouseStore = {
   warehouse: Warehouse;
   setWarehouse: (warehouse: Warehouse) => void;
