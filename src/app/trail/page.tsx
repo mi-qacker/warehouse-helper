@@ -2,7 +2,7 @@
 
 import {solveOptimizationRoute} from '@/modules/genetic-algorithm';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
-import Button from '@/ui/Button';
+import Button from '@/ui/common/Button';
 import Link from 'next/link';
 import {useCallback, useMemo} from 'react';
 

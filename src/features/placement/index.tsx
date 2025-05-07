@@ -1,6 +1,6 @@
 import {solveOptimizationPlacement} from '@/modules/lp-solver';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
-import Button from '@/ui/Button';
+import Button from '@/ui/common/Button';
 import Link from 'next/link';
 import {useCallback, useState} from 'react';
 

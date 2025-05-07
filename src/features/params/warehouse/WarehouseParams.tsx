@@ -2,10 +2,10 @@
 
 import {Warehouse} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
-import Button from '@/ui/Button';
-import FormError from '@/ui/FormError';
-import Input from '@/ui/Input';
-import Textarea from '@/ui/Textarea';
+import Button from '@/ui/common/Button';
+import FormError from '@/ui/forms/FormError';
+import Input from '@/ui/forms/Input';
+import Textarea from '@/ui/forms/Textarea';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
