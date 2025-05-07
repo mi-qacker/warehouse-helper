@@ -1,8 +1,8 @@
 import {useWarehouseStore} from '@/storages/warehouse-storage';
-import Button from '@/ui/Button';
-import Input from '@/ui/Input';
-import FormError from '@/ui/FormError';
-import Select from '@/ui/Select';
+import Button from '@/ui/common/Button';
+import Input from '@/ui/forms/Input';
+import FormError from '@/ui/forms/FormError';
+import Select from '@/ui/forms/Select';
 import {
   Disclosure,
   DisclosureButton,

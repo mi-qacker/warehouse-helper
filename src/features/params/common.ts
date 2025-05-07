@@ -1,4 +1,4 @@
-import {type SelectProps} from '@/ui/Select';
+import {type SelectProps} from '@/ui/forms/Select';
 
 export const ZONE_CONDITION_OPTIONS: SelectProps['options'] = [
   {value: 'cold', label: 'Холодильная'},

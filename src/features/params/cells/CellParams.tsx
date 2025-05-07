@@ -1,10 +1,10 @@
 import {NewCell} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
-import Button from '@/ui/Button';
-import FormError from '@/ui/FormError';
-import Input from '@/ui/Input';
-import Textarea from '@/ui/Textarea';
-import Select from '@/ui/Select';
+import Button from '@/ui/common/Button';
+import FormError from '@/ui/forms/FormError';
+import Input from '@/ui/forms/Input';
+import Textarea from '@/ui/forms/Textarea';
+import Select from '@/ui/forms/Select';
 import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/20/solid';
 import {zodResolver} from '@hookform/resolvers/zod';

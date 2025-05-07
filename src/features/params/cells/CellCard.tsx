@@ -1,5 +1,5 @@
 import {Cell} from '@/storages/types';
-import Button from '@/ui/Button';
+import Button from '@/ui/common/Button';
 import {PencilSquareIcon, TrashIcon} from '@heroicons/react/16/solid';
 import {useCallback} from 'react';
 

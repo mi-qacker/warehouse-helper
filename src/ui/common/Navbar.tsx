@@ -1,7 +1,7 @@
 import {CONFIG} from '@/config';
 import Link from 'next/link';
 
-export function Navbar() {
+export default function Navbar() {
   return (
     <nav className="bg-blue-600 p-4">
       <div className="container mx-auto flex items-center justify-between">
