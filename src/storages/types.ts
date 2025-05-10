@@ -32,7 +32,7 @@ export type Placement = {
   [cellId: Cell['id']]: Array<Product['id']>;
 };
 export type Route = Cell[];
-
+export type Graph = {size: number};
 export type WarehouseStore = {
   warehouse: Warehouse;
   setWarehouse: (warehouse: Warehouse) => void;
@@ -57,4 +57,7 @@ export type WarehouseStore = {
   distance: number | null;
   setRoute: (route: Route, distance: number) => void;
   resetRoute: () => void;
+
+  graph: Graph | null;
+  setGraph: (graph: Graph) => void;
 };

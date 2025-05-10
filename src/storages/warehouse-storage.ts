@@ -82,6 +82,12 @@ export const useWarehouseStore = create<WarehouseStore>()(
       resetRoute() {
         set({distance: null, route: null});
       },
+
+      // Graph functions
+      graph: null,
+      setGraph(graph) {
+        set({graph});
+      },
     }),
     {
       name: 'warehouse-params',

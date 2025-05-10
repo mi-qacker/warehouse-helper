@@ -8,7 +8,7 @@ export const DEMO_DATA: Pick<
   warehouse: {
     bounds: [0, 0, 350, 250],
     inputPoint: point([0, 0]),
-    outputPoint: point([0, 0]),
+    outputPoint: point([350, 250]),
   },
   cells: [
     {
@@ -16,7 +16,7 @@ export const DEMO_DATA: Pick<
       name: `A1`,
       capacity: 100,
       zoneCondition: `normal`,
-      loadingPoint: point([120, 45]),
+      loadingPoint: point([150, 40]),
       bounds: [120, 45, 180, 80],
     },
     {
@@ -24,7 +24,7 @@ export const DEMO_DATA: Pick<
       name: `B2`,
       capacity: 50,
       zoneCondition: `cold`,
-      loadingPoint: point([240, 45]),
+      loadingPoint: point([295, 70]),
       bounds: [240, 45, 290, 90],
     },
     {
@@ -32,7 +32,7 @@ export const DEMO_DATA: Pick<
       name: `B3`,
       capacity: 50,
       zoneCondition: `cold`,
-      loadingPoint: point([70, 120]),
+      loadingPoint: point([65, 140]),
       bounds: [70, 120, 100, 170],
     },
     {
@@ -40,7 +40,7 @@ export const DEMO_DATA: Pick<
       name: `C4`,
       capacity: 200,
       zoneCondition: `dry`,
-      loadingPoint: point([180, 120]),
+      loadingPoint: point([175, 140]),
       bounds: [180, 120, 250, 170],
     },
   ],

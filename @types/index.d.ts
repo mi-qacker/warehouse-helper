@@ -94,3 +94,14 @@ declare module 'genetic-js' {
 
   export {create, Select1, Select2, Optimize, Clone, Genetic};
 }
+
+declare module 'rbush-knn' {
+  export default function knn(
+    tree: RBush<Geometry, GeoJsonProperties>,
+    x: number,
+    y: number,
+    n: number,
+    predicate?: (item: Geometry) => boolean,
+    maxDistance?: number
+  );
+}

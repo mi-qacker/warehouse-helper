@@ -1,5 +1,5 @@
 import {Cell} from '@/storages/types';
-import {Point} from 'geojson';
+import {getDistance} from '@/modules/common';
 
 /**
  * key format: `<CELL_ID_FROM>-<CELL_ID_TO>`
@@ -12,7 +12,7 @@ export function getDistanceMatrix(cells: Cell[]): DistanceMatrix {
     const fromCell = cells[i];
     for (let j = 0; j < cells.length; j++) {
       const toCell = cells[j];
-      const distance = getCellsDistance(
+      const distance = getDistance(
         fromCell.loadingPoint.geometry,
         toCell.loadingPoint.geometry
       );
@@ -21,10 +21,4 @@ export function getDistanceMatrix(cells: Cell[]): DistanceMatrix {
     }
   }
   return distanceMatrix;
-}
-
-export function getCellsDistance(from: Point, to: Point): number {
-  const [x1, y1] = from.coordinates;
-  const [x2, y2] = to.coordinates;
-  return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 }
