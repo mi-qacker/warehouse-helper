@@ -109,9 +109,6 @@ export async function solveOptimizationPlacement(
     throw new Error('Failed to find optimal solution');
   }
 
-  const message = await glpk.write(lp);
-  console.log(message);
-
   // Format the result
   const solution: Placement = {};
   Object.entries(result.result.vars).forEach(([varName, value]) => {
