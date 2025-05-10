@@ -12,6 +12,10 @@ import {
   ApiRequest as PlacementRequest,
   ApiResponse as PlacementResponse,
 } from '../api/placement';
+import {
+  ApiRequest as GraphRequest,
+  ApiResponse as GraphResponse,
+} from '../api/graph';
 
 enum FETCH_STATUS {
   IDLE,
@@ -23,9 +27,10 @@ export default function SolutionPage() {
   const {
     products,
     cells,
-    warehouse: {inputPoint, outputPoint},
+    warehouse: {inputPoint, outputPoint, bounds},
     setPlacement,
     setRoute,
+    graph,
   } = useWarehouseStore();
 
   const [showProgress, setShowProgress] = useState(false);
@@ -65,8 +70,32 @@ export default function SolutionPage() {
         setRouteStatus(FETCH_STATUS.SUCCESS);
 
         setRoute(route, distance);
+
+        const body: GraphRequest = {
+          bounds: bounds,
+          cells,
+          warehousePoints: [inputPoint, outputPoint],
+          size: {width: graph?.size ?? 20, height: graph?.size ?? 20},
+        };
+        return fetch('/api/graph', {
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
+      })
+      .then(async res => {
+        const {graphId}: GraphResponse = await res.json();
+        console.log('🚀 ~ onStartOptimization ~ graphId:', graphId);
       });
-  }, [cells, inputPoint, outputPoint, products, setPlacement, setRoute]);
+  }, [
+    bounds,
+    cells,
+    graph,
+    inputPoint,
+    outputPoint,
+    products,
+    setPlacement,
+    setRoute,
+  ]);
 
   return (
     <main className="container mx-auto">
