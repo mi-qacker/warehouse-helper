@@ -10,7 +10,7 @@ import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
 import {bboxPolygon, point} from '@turf/turf';
-import {Feature, LineString} from 'geojson';
+import {Feature, LineString, Point} from 'geojson';
 
 const SVG_PADDING = 10;
 
@@ -34,17 +34,6 @@ export default function WarehouseMapSchema() {
       {cells.map(({id}) => (
         <CellSvgRect key={id} cellId={id} />
       ))}
-
-      <PointFeature
-        feature={warehouse.inputPoint}
-        radius={5}
-        className="fill-red-700"
-      />
-      <PointFeature
-        feature={warehouse.outputPoint}
-        radius={5}
-        className="fill-yellow-700"
-      />
     </Map>
   );
 }
@@ -63,12 +52,6 @@ export function CellSvgRect(props: {cellId: string}) {
       <PolygonFeature
         className="fill-blue-100 stroke-blue-500 stroke-2"
         feature={bboxPolygon(cell.bounds)}
-      />
-
-      <PointFeature
-        feature={cell.loadingPoint}
-        radius={5}
-        className="fill-green-700"
       />
 
       <Text
@@ -118,6 +101,21 @@ function WarehouseGraphGrid() {
     ));
   };
 
+  const nodes = () => {
+    const nodes: {id: string | number; feature: Feature<Point>}[] = [];
+    nrgaph.forEachNode(node => {
+      nodes.push({id: node.id, feature: node.data});
+    });
+    return nodes.map(node => (
+      <PointFeature
+        key={node.id}
+        feature={node.feature}
+        radius={3}
+        className="fill-none stroke-blue-400 stroke-1"
+      />
+    ));
+  };
+
   return (
     <>
       {/* {filteredGrid.features.map((feature, i) => (
@@ -128,6 +126,7 @@ function WarehouseGraphGrid() {
         />
       ))} */}
       {links()}
+      {nodes()}
     </>
   );
 }
