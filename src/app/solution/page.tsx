@@ -1,16 +1,17 @@
 'use client';
 
+import {useWarehouseStore} from '@/storages/warehouse-storage';
 import {Button} from '@headlessui/react';
+import {CheckIcon, ClockIcon} from '@heroicons/react/20/solid';
 import {useCallback, useState} from 'react';
-import {
-  ApiRequest as PlacementRequest,
-  ApiResponse as PlacementResponse,
-} from '../api/placement';
 import {
   ApiRequest as GenericRouteRequest,
   ApiResponse as GenericRouteResponse,
 } from '../api/generic-route';
-import {useWarehouseStore} from '@/storages/warehouse-storage';
+import {
+  ApiRequest as PlacementRequest,
+  ApiResponse as PlacementResponse,
+} from '../api/placement';
 
 enum FETCH_STATUS {
   IDLE,
@@ -93,18 +94,33 @@ export default function SolutionPage() {
       </div>
       {showProgress && (
         <div>
-          <ul className="list-inside list-decimal underline">
-            <li>
+          <ul className="list-inside list-decimal">
+            <li className="flex flex-row items-center gap-2">
               <span>Placement</span>
-              <span>{placementStatus}</span>
+              <span>
+                <StatusView status={placementStatus} />
+              </span>
             </li>
-            <li>
+            <li className="flex flex-row items-center gap-2">
               <span>Route path</span>
-              <span>{routeStatus}</span>
+              <span>
+                <StatusView status={routeStatus} />
+              </span>
             </li>
           </ul>
         </div>
       )}
     </main>
   );
+}
+
+function StatusView(props: {status: FETCH_STATUS}) {
+  if (props.status === FETCH_STATUS.SUCCESS) {
+    return <CheckIcon className="size-4" />;
+  }
+
+  if (props.status === FETCH_STATUS.PROGRESS) {
+    return <ClockIcon className="size-4" />;
+  }
+  return null;
 }
