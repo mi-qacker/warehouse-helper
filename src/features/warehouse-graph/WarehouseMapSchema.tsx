@@ -1,6 +1,7 @@
 import {createRectangleGrid, filterGridByCollisions} from '@/modules/graph';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Map from '@/ui/map/Map';
+import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
 import {bboxPolygon, point} from '@turf/turf';
@@ -27,6 +28,17 @@ export default function WarehouseMapSchema() {
       {cells.map(({id}) => (
         <CellSvgRect key={id} cellId={id} />
       ))}
+
+      <PointFeature
+        feature={warehouse.inputPoint}
+        radius={5}
+        className="fill-red-700"
+      />
+      <PointFeature
+        feature={warehouse.outputPoint}
+        radius={5}
+        className="fill-yellow-700"
+      />
     </Map>
   );
 }
@@ -45,6 +57,12 @@ export function CellSvgRect(props: {cellId: string}) {
       <PolygonFeature
         className="fill-blue-100 stroke-blue-500 stroke-2"
         feature={bboxPolygon(cell.bounds)}
+      />
+
+      <PointFeature
+        feature={cell.loadingPoint}
+        radius={5}
+        className="fill-green-700"
       />
 
       <Text
