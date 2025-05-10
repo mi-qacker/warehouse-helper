@@ -1,29 +1,41 @@
 'use client';
 
 import {Button} from '@headlessui/react';
-import {useCallback} from 'react';
+import {useCallback, useState} from 'react';
 import {ApiRequest, ApiResponse} from '../api/placement';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
+
+enum FETCH_STATUS {
+  IDLE,
+  PROGRESS,
+  SUCCESS,
+}
 
 export default function SolutionPage() {
   const {
     products,
     cells,
     warehouse: {inputPoint},
+    setPlacement,
   } = useWarehouseStore();
+
+  const [showProgress, setShowProgress] = useState(false);
+  const [placementStatus, setPlacementStatus] = useState(FETCH_STATUS.IDLE);
 
   const onStartOptimization = useCallback(() => {
     const body: ApiRequest = {products, cells, startPosition: inputPoint};
 
+    setPlacementStatus(FETCH_STATUS.PROGRESS);
+    setShowProgress(true);
     fetch('/api/placement', {
       method: 'POST',
       body: JSON.stringify(body),
-    })
-      .then(res => res.json())
-      .then((data: ApiResponse) => {
-        console.log(data);
-      });
-  }, [cells, inputPoint, products]);
+    }).then(async res => {
+      const data: ApiResponse = await res.json();
+      setPlacementStatus(FETCH_STATUS.SUCCESS);
+      setPlacement(data.placement);
+    });
+  }, [cells, inputPoint, products, setPlacement]);
 
   return (
     <main className="container mx-auto">
@@ -49,6 +61,18 @@ export default function SolutionPage() {
           Start Optimization
         </Button>
       </div>
+      {showProgress && (
+        <div>
+          <ul className="list-inside list-decimal underline">
+            <li>
+              <span>Placement</span> <span>{placementStatus}</span>
+            </li>
+            <li>
+              <span>Route path</span>
+            </li>
+          </ul>
+        </div>
+      )}
     </main>
   );
 }
