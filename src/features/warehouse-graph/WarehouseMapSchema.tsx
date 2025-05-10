@@ -1,10 +1,16 @@
-import {createRectangleGrid, filterGridByCollisions} from '@/modules/graph';
+import {
+  createGraph,
+  createRectangleGrid,
+  filterGridByCollisions,
+} from '@/modules/graph';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
+import LineFeature from '@/ui/map/LineFeature';
 import Map from '@/ui/map/Map';
 import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
 import {bboxPolygon, point} from '@turf/turf';
+import {Feature, LineString} from 'geojson';
 
 const SVG_PADDING = 10;
 
@@ -91,15 +97,37 @@ function WarehouseGraphGrid() {
     cells.map(cell => bboxPolygon(cell.bounds))
   );
 
+  const nrgaph = createGraph(
+    filteredGrid,
+    [warehouse.inputPoint, warehouse.outputPoint],
+    cells.map(c => c.loadingPoint),
+    {maxDistance: Math.sqrt(Math.pow(graph.size, 2) * 2)}
+  );
+
+  const links = () => {
+    const links: {id: string; feature: Feature<LineString>}[] = [];
+    nrgaph.forEachLink(link => {
+      links.push({id: link.id, feature: link.data});
+    });
+    return links.map(l => (
+      <LineFeature
+        key={l.id}
+        feature={l.feature}
+        className="fill-none stroke-red-400 stroke-1"
+      />
+    ));
+  };
+
   return (
     <>
-      {filteredGrid.features.map((feature, i) => (
+      {/* {filteredGrid.features.map((feature, i) => (
         <PolygonFeature
           key={i}
           feature={feature}
           className="fill-none stroke-blue-400 stroke-1"
         />
-      ))}
+      ))} */}
+      {links()}
     </>
   );
 }
