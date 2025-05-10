@@ -1,5 +1,7 @@
 import {CONFIG} from '@/config';
 import Link from 'next/link';
+import {Popover, PopoverButton, PopoverPanel} from '@headlessui/react';
+import {ChevronDownIcon} from '@heroicons/react/20/solid';
 
 export default function Navbar() {
   return (
@@ -10,7 +12,23 @@ export default function Navbar() {
         </Link>
 
         <div className="flex space-x-4">
-          <NavbarLink label="Parameters" href="/parameters" />
+          <Popover className="group relative">
+            <PopoverButton
+              as="div"
+              className="flex cursor-pointer flex-row items-center gap-1 text-white hover:text-blue-200"
+            >
+              <span>Parameters</span>
+              <ChevronDownIcon className="size-5 group-data-open:rotate-180" />
+            </PopoverButton>
+            <PopoverPanel
+              anchor="bottom"
+              className="flex w-32 flex-col gap-2 rounded-md bg-blue-500 px-4 py-2 shadow-md"
+            >
+              <NavbarLink label="Warehouse" href="/parameters/warehouse" />
+              <NavbarLink label="Products" href="/parameters/products" />
+              <NavbarLink label="Cells" href="/parameters/cells" />
+            </PopoverPanel>
+          </Popover>
           <NavbarLink label="Map" href="/map" />
           <NavbarLink label="Placement" href="/placement" />
           <NavbarLink label="Trail" href="/trail" />
