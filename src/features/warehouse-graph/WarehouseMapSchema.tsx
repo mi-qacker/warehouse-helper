@@ -2,6 +2,7 @@ import {
   createGraph,
   createRectangleGrid,
   filterGridByCollisions,
+  findPath,
 } from '@/modules/graph';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import LineFeature from '@/ui/map/LineFeature';
@@ -9,7 +10,7 @@ import Map from '@/ui/map/Map';
 import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
-import {bboxPolygon, point} from '@turf/turf';
+import {bboxPolygon, lineString, point} from '@turf/turf';
 import {Feature, LineString, Point} from 'geojson';
 
 const SVG_PADDING = 10;
@@ -87,6 +88,18 @@ function WarehouseGraphGrid() {
     {maxDistance: Math.sqrt(Math.pow(graph.size, 2) * 2)}
   );
 
+  const path = () => {
+    const path = findPath(nrgaph, 'warehouse_0', 'warehouse_0'); // TODO: only for debug. remove me
+    const feature = lineString(path.map(p => p.geometry.coordinates));
+    return (
+      <LineFeature
+        feature={feature}
+        className="fill-none stroke-red-800 stroke-2"
+        strokeDasharray={6}
+      />
+    );
+  };
+
   const links = () => {
     const links: {id: string; feature: Feature<LineString>}[] = [];
     nrgaph.forEachLink(link => {
@@ -127,6 +140,7 @@ function WarehouseGraphGrid() {
       ))} */}
       {links()}
       {nodes()}
+      {path()}
     </>
   );
 }
