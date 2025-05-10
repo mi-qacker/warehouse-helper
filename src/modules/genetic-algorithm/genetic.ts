@@ -1,8 +1,9 @@
 import {Cell} from '@/storages/types';
 import {Feature, Point} from 'geojson';
 import {getPermutations} from './permutations';
-import {getCellsDistance, getDistanceMatrix} from './distance-matrix';
+import {getDistanceMatrix} from './distance-matrix';
 import {getRandomIndex} from './random-index';
+import {getDistance} from '@/modules/common';
 
 async function loadGenetic<TEntity, TUserData>() {
   const Genetic = await import('genetic-js');
@@ -37,7 +38,7 @@ export function solveOptimizationRoute(
     distanceMatrix,
     permutations,
     getRandomIndex,
-    getCellsDistance,
+    getDistance,
     startPoint,
     endPoint,
   };
@@ -55,7 +56,7 @@ export function solveOptimizationRoute(
 
       for (let i = 0; i < entity.length; i++) {
         if (!entity[i - 1]) {
-          dist += this.userData.getCellsDistance(
+          dist += this.userData.getDistance(
             this.userData.startPoint.geometry,
             entity[i].loadingPoint.geometry
           );
@@ -67,7 +68,7 @@ export function solveOptimizationRoute(
         dist += distanceMatrix[`${currCellId}-${prevCellId}`];
       }
 
-      dist += this.userData.getCellsDistance(
+      dist += this.userData.getDistance(
         entity[entity.length - 1].loadingPoint.geometry,
         this.userData.endPoint.geometry
       );

@@ -1,7 +1,7 @@
 import {Feature, LineString, Point} from 'geojson';
 import {Graph} from 'ngraph.graph';
 import ngraph_path from 'ngraph.path';
-import {getCellsDistance} from '../genetic-algorithm/distance-matrix';
+import {getDistance} from '@/modules/common';
 
 export function findPath(
   ngraph: Graph<Feature<Point>, Feature<LineString>>,
@@ -10,7 +10,7 @@ export function findPath(
 ): Feature<Point>[] {
   const pathFinder = ngraph_path.aStar(ngraph, {
     distance(from, to) {
-      const distance = getCellsDistance(from.data.geometry, to.data.geometry);
+      const distance = getDistance(from.data.geometry, to.data.geometry);
       return distance;
     },
   });
