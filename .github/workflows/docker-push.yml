@@ -61,6 +61,6 @@ jobs:
           --image ${{vars.DOCKER_NAME }}:${{ vars.TAG }}
           --cores 1
           --memory 512MB
-          --concurrency 1
+          --concurrency 8
           --execution-timeout 30s
           --service-account-id ${{vars.SERVERLESS_SERVICE_ACCOUNT_ID}}
