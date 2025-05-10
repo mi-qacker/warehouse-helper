@@ -49,3 +49,6 @@ node_modules/
 
 # Diplodoc
 docs-html
+
+# Dev folders
+.dev
