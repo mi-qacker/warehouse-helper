@@ -2,7 +2,14 @@
 
 import {Button} from '@headlessui/react';
 import {useCallback, useState} from 'react';
-import {ApiRequest, ApiResponse} from '../api/placement';
+import {
+  ApiRequest as PlacementRequest,
+  ApiResponse as PlacementResponse,
+} from '../api/placement';
+import {
+  ApiRequest as GenericRouteRequest,
+  ApiResponse as GenericRouteResponse,
+} from '../api/generic-route';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 
 enum FETCH_STATUS {
@@ -15,27 +22,50 @@ export default function SolutionPage() {
   const {
     products,
     cells,
-    warehouse: {inputPoint},
+    warehouse: {inputPoint, outputPoint},
     setPlacement,
+    setRoute,
   } = useWarehouseStore();
 
   const [showProgress, setShowProgress] = useState(false);
   const [placementStatus, setPlacementStatus] = useState(FETCH_STATUS.IDLE);
+  const [routeStatus, setRouteStatus] = useState(FETCH_STATUS.IDLE);
 
   const onStartOptimization = useCallback(() => {
-    const body: ApiRequest = {products, cells, startPosition: inputPoint};
+    const body: PlacementRequest = {products, cells, startPosition: inputPoint};
 
     setPlacementStatus(FETCH_STATUS.PROGRESS);
     setShowProgress(true);
     fetch('/api/placement', {
       method: 'POST',
       body: JSON.stringify(body),
-    }).then(async res => {
-      const data: ApiResponse = await res.json();
-      setPlacementStatus(FETCH_STATUS.SUCCESS);
-      setPlacement(data.placement);
-    });
-  }, [cells, inputPoint, products, setPlacement]);
+    })
+      .then(async res => {
+        const {placement}: PlacementResponse = await res.json();
+        setPlacementStatus(FETCH_STATUS.SUCCESS);
+        setPlacement(placement);
+
+        const cellIDs = Object.keys(placement);
+        const cellsForRoute = cells.filter(cell => cellIDs.includes(cell.id));
+
+        const body: GenericRouteRequest = {
+          cells: cellsForRoute,
+          inputPoint,
+          outputPoint,
+        };
+        setRouteStatus(FETCH_STATUS.PROGRESS);
+        return fetch('/api/generic-route', {
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
+      })
+      .then(async res => {
+        const {route, distance}: GenericRouteResponse = await res.json();
+        setRouteStatus(FETCH_STATUS.SUCCESS);
+
+        setRoute(route, distance);
+      });
+  }, [cells, inputPoint, outputPoint, products, setPlacement, setRoute]);
 
   return (
     <main className="container mx-auto">
@@ -65,10 +95,12 @@ export default function SolutionPage() {
         <div>
           <ul className="list-inside list-decimal underline">
             <li>
-              <span>Placement</span> <span>{placementStatus}</span>
+              <span>Placement</span>
+              <span>{placementStatus}</span>
             </li>
             <li>
               <span>Route path</span>
+              <span>{routeStatus}</span>
             </li>
           </ul>
         </div>

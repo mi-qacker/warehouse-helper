@@ -104,7 +104,7 @@ export async function solveOptimizationPlacement(
   });
 
   // Solve the problem
-  const result = await glpk.solve(lp, glpk.GLP_MSG_DBG);
+  const result = await glpk.solve(lp);
   if (result.result.status !== glpk.GLP_OPT) {
     throw new Error('Failed to find optimal solution');
   }
