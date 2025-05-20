@@ -1,6 +1,7 @@
 import {Cell, Placement, Product} from '@/storages/types';
 import {Feature, Point} from 'geojson';
 import type {GLPK, LP} from 'glpk.js';
+import {getDistance} from '@/modules/common';
 
 let glpk: GLPK;
 
@@ -35,7 +36,7 @@ export async function solveOptimizationPlacement(
       const varName = `x_${product.id}_${cell.id}`;
       lp.objective.vars.push({
         name: varName,
-        coef: getDist(startPosition.geometry, cell.loadingPoint.geometry),
+        coef: getDistance(startPosition.geometry, cell.loadingPoint.geometry),
       });
       lp.binaries?.push(varName);
     });
@@ -126,10 +127,4 @@ export async function solveOptimizationPlacement(
   });
 
   return solution;
-}
-
-function getDist(start: Point, end: Point): number {
-  const [x1, y1] = start.coordinates;
-  const [x2, y2] = end.coordinates;
-  return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 }
