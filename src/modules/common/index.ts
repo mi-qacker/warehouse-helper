@@ -1,1 +1,1 @@
-export {getDistance} from './get-distance';
+export {getDistance2 as getDistance, getDistancePoints} from './get-distance';

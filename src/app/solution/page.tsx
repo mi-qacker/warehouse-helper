@@ -20,20 +20,24 @@ enum FETCH_STATUS {
 }
 
 export default function SolutionPage() {
-  const {
-    products,
-    cells,
-    warehouse: {inputPoint, outputPoint},
-    setPlacement,
-    setRoute,
-  } = useWarehouseStore();
+  const {products, cells, warehouse, graph, setPlacement, setRoute} =
+    useWarehouseStore();
 
   const [showProgress, setShowProgress] = useState(false);
   const [placementStatus, setPlacementStatus] = useState(FETCH_STATUS.IDLE);
   const [routeStatus, setRouteStatus] = useState(FETCH_STATUS.IDLE);
 
   const onStartOptimization = useCallback(() => {
-    const body: PlacementRequest = {products, cells, startPosition: inputPoint};
+    const body: PlacementRequest = {
+      products,
+      cells,
+      startPosition: warehouse.inputPoint,
+    };
+
+    fetch('/api/distance-matrix', {
+      method: 'POST',
+      body: JSON.stringify({warehouse, cells, graph}),
+    });
 
     setPlacementStatus(FETCH_STATUS.PROGRESS);
     setShowProgress(true);
@@ -51,8 +55,8 @@ export default function SolutionPage() {
 
         const body: GenericRouteRequest = {
           cells: cellsForRoute,
-          inputPoint,
-          outputPoint,
+          inputPoint: warehouse.inputPoint,
+          outputPoint: warehouse.outputPoint,
         };
         setRouteStatus(FETCH_STATUS.PROGRESS);
         return fetch('/api/generic-route', {
@@ -66,7 +70,14 @@ export default function SolutionPage() {
 
         setRoute(route, distance);
       });
-  }, [cells, inputPoint, outputPoint, products, setPlacement, setRoute]);
+  }, [
+    cells,
+    products,
+    setPlacement,
+    setRoute,
+    warehouse.inputPoint,
+    warehouse.outputPoint,
+  ]);
 
   return (
     <main className="container mx-auto">
