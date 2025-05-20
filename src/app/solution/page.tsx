@@ -57,6 +57,7 @@ export default function SolutionPage() {
         products,
         cells,
         startPosition: warehouse.inputPoint,
+        distanceMatrix: distanceMatrix.distanceMatrixPoints,
       } as PlacementRequest),
     }).then(res => res.json());
     setPlacementStatus(FETCH_STATUS.SUCCESS);
