@@ -48,7 +48,7 @@ export function createGraph(
   });
 
   cellPoints.forEach((cellPoint, index) => {
-    const cellPointId = `cell_${index}`;
+    const cellPointId = cellPoint.id!;
     graph.addNode(cellPointId, cellPoint);
     const neighbors: Feature<Polygon>[] = findKNN(cellPoint.geometry);
 

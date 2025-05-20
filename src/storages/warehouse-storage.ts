@@ -43,10 +43,13 @@ export const useWarehouseStore = create<WarehouseStore>()(
       // Cells functions
       addCell(newCell) {
         const oldCells = get().cells;
-        set({cells: oldCells.concat({...newCell, id: getUUID('cell')})});
+        const newId = getUUID('cell');
+        newCell.loadingPoint.id = newId;
+        set({cells: oldCells.concat({...newCell, id: newId})});
         get().resetPlacement();
       },
       updateCell(id, updatedCell) {
+        updatedCell.loadingPoint.id = id;
         const newCells = get().cells.map(cell =>
           cell.id === id ? {...updatedCell, id} : cell
         );
