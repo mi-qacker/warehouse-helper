@@ -16,11 +16,11 @@ export function createPointDistanceMatrix(
   const warehousePoints = [warehouse.inputPoint, warehouse.outputPoint];
 
   for (let i = 0; i < warehousePoints.length; i++) {
-    const fromPointId = `warehouse_${i}`;
+    const fromPoint = warehousePoints[i];
     for (let j = 0; j < cells.length; j++) {
       const toCell = cells[j];
-      const path = findPath(nrgaph, fromPointId, toCell.id);
-      distanceMatrix[`${fromPointId}-${toCell.id}`] = {
+      const path = findPath(nrgaph, fromPoint.id! as string, toCell.id);
+      distanceMatrix[`${fromPoint.id}-${toCell.id}`] = {
         distance: getDistancePoints(path.map(f => f.geometry)),
         path:
           path.length === 1

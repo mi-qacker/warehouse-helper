@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
-import {DEMO_DATA} from './init-data';
+import {DEMO_DATA, WAREHOUSE_INPUT_ID, WAREHOUSE_OUTPUT_ID} from './init-data';
 import {WarehouseStore} from './types';
 import {getUUID} from './common';
 
@@ -12,6 +12,8 @@ export const useWarehouseStore = create<WarehouseStore>()(
 
       // Warehouse function
       setWarehouse(warehouse) {
+        warehouse.inputPoint.id = WAREHOUSE_INPUT_ID;
+        warehouse.outputPoint.id = WAREHOUSE_OUTPUT_ID;
         set({warehouse});
         get().resetPlacement();
       },

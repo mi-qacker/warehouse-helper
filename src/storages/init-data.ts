@@ -1,5 +1,8 @@
-import {WarehouseStore} from './types';
 import {point} from '@turf/turf';
+import {WarehouseStore} from './types';
+
+export const WAREHOUSE_INPUT_ID = 'warehouse_input';
+export const WAREHOUSE_OUTPUT_ID = 'warehouse_output';
 
 export const DEMO_DATA: Pick<
   WarehouseStore,
@@ -7,8 +10,8 @@ export const DEMO_DATA: Pick<
 > = {
   warehouse: {
     bounds: [0, 0, 350, 250],
-    inputPoint: point([0, 0]),
-    outputPoint: point([350, 250]),
+    inputPoint: point([0, 0], {}, {id: WAREHOUSE_INPUT_ID}),
+    outputPoint: point([350, 250], {}, {id: WAREHOUSE_OUTPUT_ID}),
   },
   cells: [
     {

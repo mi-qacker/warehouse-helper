@@ -29,8 +29,8 @@ export function createGraph(
 
   const graph = ngraph_graph<Feature<Point>, Feature<LineString>>();
 
-  warehousePoints.forEach((warehousePoint, index) => {
-    const warehousePointId = `warehouse_${index}`;
+  warehousePoints.forEach(warehousePoint => {
+    const warehousePointId = warehousePoint.id!;
     graph.addNode(warehousePointId, warehousePoint);
     const neighbors: Feature<Polygon>[] = findKNN(warehousePoint.geometry);
 
@@ -47,7 +47,7 @@ export function createGraph(
     });
   });
 
-  cellPoints.forEach((cellPoint, index) => {
+  cellPoints.forEach(cellPoint => {
     const cellPointId = cellPoint.id!;
     graph.addNode(cellPointId, cellPoint);
     const neighbors: Feature<Polygon>[] = findKNN(cellPoint.geometry);

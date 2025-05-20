@@ -89,7 +89,11 @@ function WarehouseGraphGrid() {
   );
 
   const path = () => {
-    const path = findPath(nrgaph, 'warehouse_0', 'warehouse_1'); // TODO: only for debug. remove me
+    const path = findPath(
+      nrgaph,
+      warehouse.inputPoint.id! as string,
+      warehouse.outputPoint.id! as string
+    ); // TODO: only for debug. remove me
     const feature = lineString(path.map(p => p.geometry.coordinates));
     return (
       <LineFeature
