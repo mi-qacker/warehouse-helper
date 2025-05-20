@@ -12,7 +12,7 @@
     "lint:prettier": "prettier . --check",
     "lint:prettier:fix": "prettier . --write",
     "lint:stylelint": "stylelint \"**/*.css\"",
-    "build:docs": "yfm build -i ./docs -o ./docs-html -c ./docs/.yfm"
+    "build:docs": "yfm build -i ./docs -o ./docs-html"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.3",
