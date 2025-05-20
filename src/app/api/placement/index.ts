@@ -1,6 +1,6 @@
 import {Cell, Placement, Product} from '@/storages/types';
 import {Feature, Point} from 'geojson';
-import {DistanceMatrix} from '../distance-matrix';
+import {DistanceMatrix} from '@/app/api/distance-matrix';
 
 export type ApiRequest = {
   products: Product[];

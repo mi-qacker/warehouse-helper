@@ -73,6 +73,10 @@ export default function SolutionPage() {
         cells: cellsForRoute,
         inputPoint: warehouse.inputPoint,
         outputPoint: warehouse.outputPoint,
+        distanceMatrix: {
+          ...distanceMatrix.distanceMatrixPoints,
+          ...distanceMatrix.distanceMatrixCells,
+        },
       } as GenericRouteRequest),
     }).then(res => res.json());
     setRouteStatus(FETCH_STATUS.SUCCESS);
