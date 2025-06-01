@@ -1,9 +1,8 @@
+import {DistanceMatrix} from '@/app/api/distance-matrix';
 import {Cell} from '@/storages/types';
 import {Feature, Point} from 'geojson';
 import {getPermutations} from './permutations';
-import {getDistanceMatrix} from './distance-matrix';
 import {getRandomIndex} from './random-index';
-import {getDistance} from '@/modules/common';
 
 async function loadGenetic<TEntity, TUserData>() {
   const Genetic = await import('genetic-js');
@@ -29,16 +28,15 @@ export type Solution = {
 export function solveOptimizationRoute(
   cells: Cell[],
   startPoint: Feature<Point>,
-  endPoint: Feature<Point>
+  endPoint: Feature<Point>,
+  distanceMatrix: DistanceMatrix
 ): Promise<Solution> {
-  const distanceMatrix = getDistanceMatrix(cells);
   const permutations = getPermutations(cells);
 
   const geneticUserData = {
     distanceMatrix,
     permutations,
     getRandomIndex,
-    getDistance,
     startPoint,
     endPoint,
   };
@@ -56,22 +54,22 @@ export function solveOptimizationRoute(
 
       for (let i = 0; i < entity.length; i++) {
         if (!entity[i - 1]) {
-          dist += this.userData.getDistance(
-            this.userData.startPoint.geometry,
-            entity[i].loadingPoint.geometry
-          );
+          dist +=
+            this.userData.distanceMatrix[
+              `${this.userData.startPoint.id}-${entity[i].loadingPoint.id}`
+            ].distance;
           continue;
         }
         const currCellId = entity[i].id;
         const prevCellId = entity[i - 1].id;
 
-        dist += distanceMatrix[`${currCellId}-${prevCellId}`];
+        dist += distanceMatrix[`${currCellId}-${prevCellId}`].distance;
       }
 
-      dist += this.userData.getDistance(
-        entity[entity.length - 1].loadingPoint.geometry,
-        this.userData.endPoint.geometry
-      );
+      dist +=
+        this.userData.distanceMatrix[
+          `${entity[entity.length - 1].loadingPoint.id}-${this.userData.endPoint.id}`
+        ].distance;
 
       return dist;
     };

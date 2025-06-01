@@ -27,12 +27,11 @@ export default function Navbar() {
               <NavbarLink label="Warehouse" href="/parameters/warehouse" />
               <NavbarLink label="Products" href="/parameters/products" />
               <NavbarLink label="Cells" href="/parameters/cells" />
+              <NavbarLink label="Graph" href="/graph" />
             </PopoverPanel>
           </Popover>
           <NavbarLink label="Map" href="/map" />
-          <NavbarLink label="Placement" href="/placement" />
-          <NavbarLink label="Trail" href="/trail" />
-          <NavbarLink label="Graph" href="/graph" />
+          <NavbarLink label="Solution" href="/solution" />
         </div>
 
         <div className="flex space-x-4">

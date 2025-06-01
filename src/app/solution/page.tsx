@@ -1,17 +1,22 @@
 'use client';
 
-import {useWarehouseStore} from '@/storages/warehouse-storage';
-import {Button} from '@headlessui/react';
-import {CheckIcon, ClockIcon} from '@heroicons/react/20/solid';
-import {useCallback, useState} from 'react';
+import {
+  ApiRequest as DistanceMatrixRequest,
+  ApiResponse as DistanceMatrixResponse,
+} from '@/app/api/distance-matrix';
 import {
   ApiRequest as GenericRouteRequest,
   ApiResponse as GenericRouteResponse,
-} from '../api/generic-route';
+} from '@/app/api/generic-route';
 import {
   ApiRequest as PlacementRequest,
   ApiResponse as PlacementResponse,
-} from '../api/placement';
+} from '@/app/api/placement';
+import {useWarehouseStore} from '@/storages/warehouse-storage';
+import {Button} from '@headlessui/react';
+import {CheckIcon, ClockIcon} from '@heroicons/react/20/solid';
+import Link from 'next/link';
+import {useCallback, useState} from 'react';
 
 enum FETCH_STATUS {
   IDLE,
@@ -20,53 +25,64 @@ enum FETCH_STATUS {
 }
 
 export default function SolutionPage() {
-  const {
-    products,
-    cells,
-    warehouse: {inputPoint, outputPoint},
-    setPlacement,
-    setRoute,
-  } = useWarehouseStore();
+  const {products, cells, warehouse, graph, setPlacement, setRoute} =
+    useWarehouseStore();
 
   const [showProgress, setShowProgress] = useState(false);
+  const [distanceMatrixStatus, setDistanceMatrixStatus] = useState(
+    FETCH_STATUS.IDLE
+  );
   const [placementStatus, setPlacementStatus] = useState(FETCH_STATUS.IDLE);
   const [routeStatus, setRouteStatus] = useState(FETCH_STATUS.IDLE);
 
-  const onStartOptimization = useCallback(() => {
-    const body: PlacementRequest = {products, cells, startPosition: inputPoint};
+  const onStartOptimization = useCallback(async () => {
+    setDistanceMatrixStatus(FETCH_STATUS.PROGRESS);
+    const distanceMatrix: DistanceMatrixResponse = await fetch(
+      '/api/distance-matrix',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          warehouse,
+          cells,
+          graph,
+        } as DistanceMatrixRequest),
+      }
+    ).then(res => res.json());
+    setDistanceMatrixStatus(FETCH_STATUS.SUCCESS);
 
     setPlacementStatus(FETCH_STATUS.PROGRESS);
     setShowProgress(true);
-    fetch('/api/placement', {
+    const placement: PlacementResponse = await fetch('/api/placement', {
       method: 'POST',
-      body: JSON.stringify(body),
-    })
-      .then(async res => {
-        const {placement}: PlacementResponse = await res.json();
-        setPlacementStatus(FETCH_STATUS.SUCCESS);
-        setPlacement(placement);
+      body: JSON.stringify({
+        products,
+        cells,
+        startPosition: warehouse.inputPoint,
+        distanceMatrix: distanceMatrix.distanceMatrixPoints,
+      } as PlacementRequest),
+    }).then(res => res.json());
+    setPlacementStatus(FETCH_STATUS.SUCCESS);
+    setPlacement(placement.placement);
 
-        const cellIDs = Object.keys(placement);
-        const cellsForRoute = cells.filter(cell => cellIDs.includes(cell.id));
+    const cellIDs = Object.keys(placement.placement);
+    const cellsForRoute = cells.filter(cell => cellIDs.includes(cell.id));
 
-        const body: GenericRouteRequest = {
-          cells: cellsForRoute,
-          inputPoint,
-          outputPoint,
-        };
-        setRouteStatus(FETCH_STATUS.PROGRESS);
-        return fetch('/api/generic-route', {
-          method: 'POST',
-          body: JSON.stringify(body),
-        });
-      })
-      .then(async res => {
-        const {route, distance}: GenericRouteResponse = await res.json();
-        setRouteStatus(FETCH_STATUS.SUCCESS);
-
-        setRoute(route, distance);
-      });
-  }, [cells, inputPoint, outputPoint, products, setPlacement, setRoute]);
+    setRouteStatus(FETCH_STATUS.PROGRESS);
+    const generic: GenericRouteResponse = await fetch('/api/generic-route', {
+      method: 'POST',
+      body: JSON.stringify({
+        cells: cellsForRoute,
+        inputPoint: warehouse.inputPoint,
+        outputPoint: warehouse.outputPoint,
+        distanceMatrix: {
+          ...distanceMatrix.distanceMatrixPoints,
+          ...distanceMatrix.distanceMatrixCells,
+        },
+      } as GenericRouteRequest),
+    }).then(res => res.json());
+    setRouteStatus(FETCH_STATUS.SUCCESS);
+    setRoute(generic.route, generic.lineFeature, generic.distance);
+  }, [cells, graph, products, setPlacement, setRoute, warehouse]);
 
   return (
     <main className="container mx-auto">
@@ -96,6 +112,12 @@ export default function SolutionPage() {
         <div>
           <ul className="list-inside list-decimal">
             <li className="flex flex-row items-center gap-2">
+              <span>Distance matrix</span>
+              <span>
+                <StatusView status={distanceMatrixStatus} />
+              </span>
+            </li>
+            <li className="flex flex-row items-center gap-2">
               <span>Placement</span>
               <span>
                 <StatusView status={placementStatus} />
@@ -110,6 +132,16 @@ export default function SolutionPage() {
           </ul>
         </div>
       )}
+      {distanceMatrixStatus === FETCH_STATUS.SUCCESS &&
+        placementStatus === FETCH_STATUS.SUCCESS &&
+        routeStatus === FETCH_STATUS.SUCCESS && (
+          <Link
+            className="text-blue-600 hover:text-blue-800 hover:underline"
+            href="/map"
+          >
+            Show result on map
+          </Link>
+        )}
     </main>
   );
 }

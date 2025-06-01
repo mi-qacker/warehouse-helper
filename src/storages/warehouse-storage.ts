@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
-import {DEMO_DATA} from './init-data';
+import {DEMO_DATA, WAREHOUSE_INPUT_ID, WAREHOUSE_OUTPUT_ID} from './init-data';
 import {WarehouseStore} from './types';
 import {getUUID} from './common';
 
@@ -12,6 +12,8 @@ export const useWarehouseStore = create<WarehouseStore>()(
 
       // Warehouse function
       setWarehouse(warehouse) {
+        warehouse.inputPoint.id = WAREHOUSE_INPUT_ID;
+        warehouse.outputPoint.id = WAREHOUSE_OUTPUT_ID;
         set({warehouse});
         get().resetPlacement();
       },
@@ -43,10 +45,13 @@ export const useWarehouseStore = create<WarehouseStore>()(
       // Cells functions
       addCell(newCell) {
         const oldCells = get().cells;
-        set({cells: oldCells.concat({...newCell, id: getUUID('cell')})});
+        const newId = getUUID('cell');
+        newCell.loadingPoint.id = newId;
+        set({cells: oldCells.concat({...newCell, id: newId})});
         get().resetPlacement();
       },
       updateCell(id, updatedCell) {
+        updatedCell.loadingPoint.id = id;
         const newCells = get().cells.map(cell =>
           cell.id === id ? {...updatedCell, id} : cell
         );
@@ -76,11 +81,12 @@ export const useWarehouseStore = create<WarehouseStore>()(
       // Route functions
       route: null,
       distance: null,
-      setRoute(route, distance) {
-        set({route, distance});
+      routeLineFeature: null,
+      setRoute(route, routeLineFeature, distance) {
+        set({route, routeLineFeature, distance});
       },
       resetRoute() {
-        set({distance: null, route: null});
+        set({distance: null, routeLineFeature: null, route: null});
       },
 
       // Graph functions

@@ -1,17 +1,9 @@
-import {
-  createGraph,
-  createRectangleGrid,
-  filterGridByCollisions,
-  findPath,
-} from '@/modules/graph';
+import {createRectangleGrid, filterGridByCollisions} from '@/modules/graph';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
-import LineFeature from '@/ui/map/LineFeature';
 import Map from '@/ui/map/Map';
-import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
-import {bboxPolygon, lineString, point} from '@turf/turf';
-import {Feature, LineString, Point} from 'geojson';
+import {bboxPolygon, point} from '@turf/turf';
 
 const SVG_PADDING = 10;
 
@@ -81,66 +73,15 @@ function WarehouseGraphGrid() {
     cells.map(cell => bboxPolygon(cell.bounds))
   );
 
-  const nrgaph = createGraph(
-    filteredGrid,
-    [warehouse.inputPoint, warehouse.outputPoint],
-    cells.map(c => c.loadingPoint),
-    {maxDistance: Math.sqrt(Math.pow(graph.size, 2) * 2)}
-  );
-
-  const path = () => {
-    const path = findPath(nrgaph, 'warehouse_0', 'warehouse_1'); // TODO: only for debug. remove me
-    const feature = lineString(path.map(p => p.geometry.coordinates));
-    return (
-      <LineFeature
-        feature={feature}
-        className="fill-none stroke-red-800 stroke-2"
-        strokeDasharray={6}
-      />
-    );
-  };
-
-  const links = () => {
-    const links: {id: string; feature: Feature<LineString>}[] = [];
-    nrgaph.forEachLink(link => {
-      links.push({id: link.id, feature: link.data});
-    });
-    return links.map(l => (
-      <LineFeature
-        key={l.id}
-        feature={l.feature}
-        className="fill-none stroke-red-400 stroke-1"
-      />
-    ));
-  };
-
-  const nodes = () => {
-    const nodes: {id: string | number; feature: Feature<Point>}[] = [];
-    nrgaph.forEachNode(node => {
-      nodes.push({id: node.id, feature: node.data});
-    });
-    return nodes.map(node => (
-      <PointFeature
-        key={node.id}
-        feature={node.feature}
-        radius={3}
-        className="fill-none stroke-blue-400 stroke-1"
-      />
-    ));
-  };
-
   return (
     <>
-      {/* {filteredGrid.features.map((feature, i) => (
+      {filteredGrid.features.map((feature, i) => (
         <PolygonFeature
           key={i}
           feature={feature}
           className="fill-none stroke-blue-400 stroke-1"
         />
-      ))} */}
-      {links()}
-      {nodes()}
-      {path()}
+      ))}
     </>
   );
 }
