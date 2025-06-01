@@ -4,22 +4,14 @@ import Map from '@/ui/map/Map';
 import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
-import {bboxPolygon, lineString, point} from '@turf/turf';
+import {bboxPolygon, point} from '@turf/turf';
 
 const SVG_PADDING = 10;
 const POINT_RADIUS = 5;
 const PRODUCTS_MARGIN = 8;
 
 export default function WarehouseMapSchema() {
-  const {warehouse, cells, route} = useWarehouseStore();
-
-  const trailCoordinates = !route
-    ? []
-    : [
-        warehouse.inputPoint.geometry.coordinates,
-        ...route.map(cell => cell.loadingPoint.geometry.coordinates),
-        warehouse.outputPoint.geometry.coordinates,
-      ];
+  const {warehouse, cells, routeLineFeature} = useWarehouseStore();
 
   return (
     <Map
@@ -35,13 +27,14 @@ export default function WarehouseMapSchema() {
       />
 
       {/* Trail route */}
-      {route && (
+      {routeLineFeature?.features.map(feature => (
         <LineFeature
-          feature={lineString(trailCoordinates)}
+          key={feature.id}
+          feature={feature}
           className="fill-none stroke-cyan-500 stroke-2"
           strokeDasharray="4"
         />
-      )}
+      ))}
 
       {cells.map(({id}) => (
         <CellSvgRect key={id} cellId={id} />

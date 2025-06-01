@@ -81,11 +81,12 @@ export const useWarehouseStore = create<WarehouseStore>()(
       // Route functions
       route: null,
       distance: null,
-      setRoute(route, distance) {
-        set({route, distance});
+      routeLineFeature: null,
+      setRoute(route, routeLineFeature, distance) {
+        set({route, routeLineFeature, distance});
       },
       resetRoute() {
-        set({distance: null, route: null});
+        set({distance: null, routeLineFeature: null, route: null});
       },
 
       // Graph functions

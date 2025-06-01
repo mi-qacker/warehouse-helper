@@ -1,6 +1,6 @@
-import {Cell, Route} from '@/storages/types';
-import {Feature, Point} from 'geojson';
 import {DistanceMatrix} from '@/app/api/distance-matrix';
+import {Cell, Route} from '@/storages/types';
+import {Feature, FeatureCollection, LineString, Point} from 'geojson';
 
 export type ApiRequest = {
   cells: Cell[];
@@ -10,5 +10,6 @@ export type ApiRequest = {
 };
 export type ApiResponse = {
   route: Route;
+  lineFeature: FeatureCollection<LineString>;
   distance: number;
 };

@@ -80,7 +80,7 @@ export default function SolutionPage() {
       } as GenericRouteRequest),
     }).then(res => res.json());
     setRouteStatus(FETCH_STATUS.SUCCESS);
-    setRoute(generic.route, generic.distance);
+    setRoute(generic.route, generic.lineFeature, generic.distance);
   }, [cells, graph, products, setPlacement, setRoute, warehouse]);
 
   return (

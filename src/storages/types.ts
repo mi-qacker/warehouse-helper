@@ -1,4 +1,10 @@
-import type {Point, BBox, Feature} from 'geojson';
+import type {
+  Point,
+  BBox,
+  Feature,
+  FeatureCollection,
+  LineString,
+} from 'geojson';
 
 export type New<T extends {id: string}> = Omit<T, 'id'>;
 
@@ -54,8 +60,13 @@ export type WarehouseStore = {
   resetPlacement: () => void;
 
   route: Route | null;
+  routeLineFeature: FeatureCollection<LineString> | null;
   distance: number | null;
-  setRoute: (route: Route, distance: number) => void;
+  setRoute: (
+    route: Route,
+    routeLineFeature: FeatureCollection<LineString>,
+    distance: number
+  ) => void;
   resetRoute: () => void;
 
   graph: Graph | null;
