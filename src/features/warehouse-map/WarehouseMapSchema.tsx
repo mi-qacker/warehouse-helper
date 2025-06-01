@@ -26,7 +26,7 @@ export default function WarehouseMapSchema() {
         className="fill-stone-100 stroke-stone-500 stroke-2"
       />
 
-      {/* Trail route */}
+      {/* Show route */}
       {routeLineFeature?.features.map(feature => (
         <LineFeature
           key={feature.id}

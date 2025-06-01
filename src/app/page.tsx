@@ -3,8 +3,6 @@ import Link from 'next/link';
 const LIST_LINKS: {href: string; label: string}[] = [
   {href: '/parameters', label: 'Warehouse Parameters'},
   {href: '/map', label: 'Warehouse Map'},
-  {href: '/placement', label: 'Optimize products placement'},
-  {href: '/trail', label: 'Optimize route'},
 ];
 
 export default function Page() {

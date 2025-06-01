@@ -1,9 +1,9 @@
 'use client';
 
-import {useWarehouseStore} from '@/storages/warehouse-storage';
-import {Button} from '@headlessui/react';
-import {CheckIcon, ClockIcon} from '@heroicons/react/20/solid';
-import {useCallback, useState} from 'react';
+import {
+  ApiRequest as DistanceMatrixRequest,
+  ApiResponse as DistanceMatrixResponse,
+} from '@/app/api/distance-matrix';
 import {
   ApiRequest as GenericRouteRequest,
   ApiResponse as GenericRouteResponse,
@@ -12,10 +12,11 @@ import {
   ApiRequest as PlacementRequest,
   ApiResponse as PlacementResponse,
 } from '@/app/api/placement';
-import {
-  ApiRequest as DistanceMatrixRequest,
-  ApiResponse as DistanceMatrixResponse,
-} from '@/app/api/distance-matrix';
+import {useWarehouseStore} from '@/storages/warehouse-storage';
+import {Button} from '@headlessui/react';
+import {CheckIcon, ClockIcon} from '@heroicons/react/20/solid';
+import Link from 'next/link';
+import {useCallback, useState} from 'react';
 
 enum FETCH_STATUS {
   IDLE,
@@ -131,6 +132,16 @@ export default function SolutionPage() {
           </ul>
         </div>
       )}
+      {distanceMatrixStatus === FETCH_STATUS.SUCCESS &&
+        placementStatus === FETCH_STATUS.SUCCESS &&
+        routeStatus === FETCH_STATUS.SUCCESS && (
+          <Link
+            className="text-blue-600 hover:text-blue-800 hover:underline"
+            href="/map"
+          >
+            Show result on map
+          </Link>
+        )}
     </main>
   );
 }
