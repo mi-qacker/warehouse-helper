@@ -24,30 +24,9 @@ npm run dev
 
 ## Setup using memory bank
 
-Для настройки Memory Bank выполните следующие шаги:
-
-1. **Загрузка конфигурационных файлов**:
-
-   ```bash
-   git clone https://github.com/GreatScottyMac/roo-code-memory-bank.git
-   mkdir -p .roo
-   cp roo-code-memory-bank/modules/memory_bank_strategy_*.yml .roo/
-   ```
-
-2. **Структура директории .roo после копирования**:
-
-   ```
-   .roo/
-   ├── rules-architect/rules.yml
-   ├── rules-ask/rules.yml
-   ├── rules-code/rules.yml
-   └── rules-debug/rules.yml
-   ```
-
-3. **Использование**:
-   - Все изменения в проекте автоматически фиксируются в Memory Bank
-   - Для принудительного обновления используйте команду `UMB`
-   - Перед работой проверяйте `activeContext.md` для понимания текущего состояния
+- Все изменения в проекте автоматически фиксируются в Memory Bank
+- Для принудительного обновления используйте команду `UMB`
+- Перед работой проверяйте `activeContext.md` для понимания текущего состояния
 
 Подробнее: [Roo Code Memory Bank](https://github.com/GreatScottyMac/roo-code-memory-bank)
 
