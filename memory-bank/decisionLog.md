@@ -34,3 +34,19 @@
   - Mutation: обмен местами двух случайных точек в маршруте
   - Crossover: комбинирование частей двух маршрутов
 - Для поиска пути между точками используется алгоритм A\* (библиотека ngraph.path)
+
+[2025-06-11 21:28:15] - Created performance metrics API endpoint with parameters validation
+[2025-06-11 21:28:20] - Fixed ESLint error by renaming 'module' variable to 'moduleType'
+
+[2025-06-11 21:47:33] - Реализован функционал сбора метрик производительности:
+  - Создан API endpoint `/api/performance` с поддержкой параметров:
+    * `module`: тестируемый модуль (genetic, lp, graph)
+    * `min`, `max`, `step`: диапазон размеров входных данных
+    * `iterations`: количество повторений теста
+    * `dataSource`: источник данных (auto или stored)
+  - Реализована генерация тестовых данных для разных модулей
+  - Добавлена функция формирования CSV отчетов с метриками:
+    * Module: тестируемый модуль
+    * InputSize: размер входных данных
+    * TimeMs: среднее время выполнения
+  - Обновлен план реализации в `docs/ru/pages/performance-metrics-plan.md`

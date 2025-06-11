@@ -4,7 +4,7 @@ import {Feature, Point} from 'geojson';
 import {getPermutations} from './permutations';
 import {getRandomIndex} from './random-index';
 
-async function loadGenetic<TEntity, TUserData>() {
+export async function loadGenetic<TEntity, TUserData>() {
   const Genetic = await import('genetic-js');
   const genetic = Genetic.create<TEntity, TUserData>();
   genetic.optimize = Genetic.Optimize.Minimize;
