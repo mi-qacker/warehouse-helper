@@ -1,1 +1,1 @@
-export { generateTestData, runPerformanceTest } from './performance/utils';
+export {generateTestData, runPerformanceTest} from './performance/utils';
