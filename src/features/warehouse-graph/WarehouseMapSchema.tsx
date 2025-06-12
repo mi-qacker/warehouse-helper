@@ -1,6 +1,7 @@
 import {createRectangleGrid, filterGridByCollisions} from '@/modules/graph';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import Map from '@/ui/map/Map';
+import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
 import {bboxPolygon, point} from '@turf/turf';
@@ -45,6 +46,12 @@ export function CellSvgRect(props: {cellId: string}) {
       <PolygonFeature
         className="fill-blue-100 stroke-blue-500 stroke-2"
         feature={bboxPolygon(cell.bounds)}
+      />
+
+      <PointFeature
+        radius={3}
+        feature={cell.loadingPoint}
+        className="fill-blue-600"
       />
 
       <Text
