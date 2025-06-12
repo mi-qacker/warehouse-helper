@@ -25,8 +25,8 @@ export function generateTestData(module: 'genetic' | 'lp', size: number) {
   const cellSize = 5;
   const spacing = 5;
   const gridSize = Math.ceil(Math.sqrt(size));
-  const warehouseWidth = gridSize * (cellSize + spacing) - spacing;
-  const warehouseHeight = gridSize * (cellSize + spacing) - spacing;
+  const warehouseWidth = gridSize * (cellSize + spacing) + spacing;
+  const warehouseHeight = gridSize * (cellSize + spacing) + spacing;
 
   const warehouse: Warehouse = generateWarehouse(
     warehouseWidth,
@@ -60,9 +60,16 @@ export function generateTestData(module: 'genetic' | 'lp', size: number) {
         cellPoints
       );
 
+      const pointDistanceMatrix = createPointDistanceMatrix(
+        graph,
+        warehouse,
+        cells
+      );
+      const cellDistanceMatrix = createCellsDistanceMatrix(graph, cells);
+
       const distanceMatrix: DistanceMatrix = {
-        ...createPointDistanceMatrix(graph, warehouse, cells),
-        ...createCellsDistanceMatrix(graph, cells),
+        ...pointDistanceMatrix,
+        ...cellDistanceMatrix,
       };
 
       return {
@@ -84,7 +91,7 @@ export function generateTestData(module: 'genetic' | 'lp', size: number) {
         zoneConditions
       );
 
-      const grid = createRectangleGrid([0, 0, 10, 10], {
+      const grid = createRectangleGrid(warehouse.bounds, {
         width: 1,
         height: 1,
       });
