@@ -138,79 +138,16 @@ export function generateTestData(module: 'genetic' | 'lp', size: number) {
 export async function runPerformanceTest(
   module: 'genetic' | 'lp',
   inputData: unknown,
-  iterations: number = 10
+  iterations: number
 ): Promise<number> {
-  let totalTime = 0;
+  const promises = [];
 
   try {
     for (let i = 0; i < iterations; i++) {
-      const start = performance.now();
-
-      switch (module) {
-        case 'genetic': {
-          if (
-            typeof inputData !== 'object' ||
-            inputData === null ||
-            !('cells' in inputData) ||
-            !('startPoint' in inputData) ||
-            !('endPoint' in inputData) ||
-            !('distanceMatrix' in inputData)
-          ) {
-            throw new Error(
-              'Genetic module requires {cells: Cell[], startPoint: Feature<Point>, endPoint: Feature<Point>, distanceMatrix: number[][]} input'
-            );
-          }
-          // Проверка типов уже выполнена выше
-
-          const {cells, startPoint, endPoint, distanceMatrix} = inputData as {
-            cells: Cell[];
-            startPoint: Feature<Point>;
-            endPoint: Feature<Point>;
-            distanceMatrix: DistanceMatrix;
-          };
-          await solveOptimizationRoute(
-            cells,
-            startPoint,
-            endPoint,
-            distanceMatrix
-          );
-          break;
-        }
-        case 'lp': {
-          if (
-            typeof inputData !== 'object' ||
-            inputData === null ||
-            !('products' in inputData) ||
-            !('cells' in inputData)
-          ) {
-            throw new Error(
-              'LP module requires {products: Product[], cells: Cell[]} input'
-            );
-          }
-          // Проверка типов уже выполнена выше
-          const {products, cells, distanceMatrix, warehousePoints} =
-            inputData as {
-              products: Product[];
-              cells: Cell[];
-              distanceMatrix: DistanceMatrix;
-              warehousePoints: Feature<Point>[];
-            };
-          await solveOptimizationPlacement(
-            products,
-            cells,
-            warehousePoints[0],
-            distanceMatrix
-          );
-          break;
-        }
-
-        default:
-          throw new Error(`Unknown module type: ${module}`);
-      }
-
-      const end = performance.now();
-      totalTime += end - start;
+      promises.push(makeIteration(module, inputData));
     }
+    const times = await Promise.all(promises);
+    const totalTime = times.reduce((prev, curr) => prev + curr, 0);
 
     return totalTime / iterations;
   } catch (error) {
@@ -218,4 +155,68 @@ export async function runPerformanceTest(
       `Performance test failed for ${module}: ${error instanceof Error ? error.message : String(error)}`
     );
   }
+}
+async function makeIteration(
+  module: string,
+  inputData: unknown
+): Promise<number> {
+  const start = performance.now();
+
+  switch (module) {
+    case 'genetic': {
+      if (
+        typeof inputData !== 'object' ||
+        inputData === null ||
+        !('cells' in inputData) ||
+        !('startPoint' in inputData) ||
+        !('endPoint' in inputData) ||
+        !('distanceMatrix' in inputData)
+      ) {
+        throw new Error(
+          'Genetic module requires {cells: Cell[], startPoint: Feature<Point>, endPoint: Feature<Point>, distanceMatrix: number[][]} input'
+        );
+      }
+      // Проверка типов уже выполнена выше
+      const {cells, startPoint, endPoint, distanceMatrix} = inputData as {
+        cells: Cell[];
+        startPoint: Feature<Point>;
+        endPoint: Feature<Point>;
+        distanceMatrix: DistanceMatrix;
+      };
+      await solveOptimizationRoute(cells, startPoint, endPoint, distanceMatrix);
+      break;
+    }
+    case 'lp': {
+      if (
+        typeof inputData !== 'object' ||
+        inputData === null ||
+        !('products' in inputData) ||
+        !('cells' in inputData)
+      ) {
+        throw new Error(
+          'LP module requires {products: Product[], cells: Cell[]} input'
+        );
+      }
+      // Проверка типов уже выполнена выше
+      const {products, cells, distanceMatrix, warehousePoints} = inputData as {
+        products: Product[];
+        cells: Cell[];
+        distanceMatrix: DistanceMatrix;
+        warehousePoints: Feature<Point>[];
+      };
+      await solveOptimizationPlacement(
+        products,
+        cells,
+        warehousePoints[0],
+        distanceMatrix
+      );
+      break;
+    }
+
+    default:
+      throw new Error(`Unknown module type: ${module}`);
+  }
+
+  const end = performance.now();
+  return end - start;
 }
