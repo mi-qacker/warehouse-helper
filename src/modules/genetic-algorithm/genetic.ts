@@ -4,8 +4,12 @@ import {Feature, Point} from 'geojson';
 import {getPermutations} from './permutations';
 import {getRandomIndex} from './random-index';
 
-async function loadGenetic<TEntity, TUserData>() {
-  const Genetic = await import('genetic-js');
+let Genetic: typeof import('genetic-js');
+
+export async function loadGenetic<TEntity, TUserData>() {
+  if (!Genetic) {
+    Genetic = await import('genetic-js');
+  }
   const genetic = Genetic.create<TEntity, TUserData>();
   genetic.optimize = Genetic.Optimize.Minimize;
   genetic.select1 = Genetic.Select1.Tournament2;
@@ -109,8 +113,15 @@ export function solveOptimizationRoute(
           resolve({route: pop[0].entity, distance: pop[0].fitness, stats});
         }
       };
-
-      genetic.evolve({size: permutations.length}, geneticUserData);
+      genetic.evolve(
+        {
+          iterations: 250,
+          size: Math.min(permutations.length, 100),
+          skip: permutations.length,
+          maxResults: 1,
+        },
+        geneticUserData
+      );
     });
   });
 }
