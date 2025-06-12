@@ -58,7 +58,7 @@ export async function GET(request: Request) {
           error instanceof Error ? error.message : 'Unknown error';
         return Response.json(
           {
-            error: `Generate test data failed for module ${moduleType}`,
+            error: `Generate test data failed for module ${moduleType}, size: ${size}`,
             details: errorMessage,
           },
           {status: 500}
@@ -77,7 +77,7 @@ export async function GET(request: Request) {
           error instanceof Error ? error.message : 'Unknown error';
         return Response.json(
           {
-            error: `Performance test failed for module ${moduleType}`,
+            error: `Performance test failed for module ${moduleType}, size: ${size}`,
             details: errorMessage,
           },
           {status: 500}

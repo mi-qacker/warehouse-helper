@@ -113,8 +113,15 @@ export function solveOptimizationRoute(
           resolve({route: pop[0].entity, distance: pop[0].fitness, stats});
         }
       };
-      const size = Math.min(permutations.length, 250);
-      genetic.evolve({size}, geneticUserData);
+      genetic.evolve(
+        {
+          iterations: 250,
+          size: Math.min(permutations.length, 100),
+          skip: permutations.length,
+          maxResults: 1,
+        },
+        geneticUserData
+      );
     });
   });
 }
