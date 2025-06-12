@@ -51,18 +51,23 @@ export async function GET(request: Request) {
     const results = [];
     for (let size = min; size <= max; size += step) {
       try {
-        const testData = generateTestData(
-          moduleType as 'genetic' | 'lp' | 'graph',
-          size
-        );
+        const testData = generateTestData(moduleType as 'genetic' | 'lp', size);
         const time = await runPerformanceTest(
-          moduleType as 'genetic' | 'lp' | 'graph',
+          moduleType as 'genetic' | 'lp',
           testData,
           iterations
         );
         results.push({module: moduleType!, size, time});
-      } catch {
-        // Error logged in response
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
+        return Response.json(
+          {
+            error: `Performance test failed for module ${moduleType}`,
+            details: errorMessage,
+          },
+          {status: 500}
+        );
       }
     }
 
