@@ -50,8 +50,22 @@ export async function GET(request: Request) {
     // Run performance tests
     const results = [];
     for (let size = min; size <= max; size += step) {
+      let testData;
       try {
-        const testData = generateTestData(moduleType as 'genetic' | 'lp', size);
+        testData = generateTestData(moduleType as 'genetic' | 'lp', size);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
+        return Response.json(
+          {
+            error: `Generate test data failed for module ${moduleType}`,
+            details: errorMessage,
+          },
+          {status: 500}
+        );
+      }
+
+      try {
         const time = await runPerformanceTest(
           moduleType as 'genetic' | 'lp',
           testData,
