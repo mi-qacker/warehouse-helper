@@ -1,3 +1,4 @@
+import {ZoneCondition} from '@/storages/types';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
 import LineFeature from '@/ui/map/LineFeature';
 import Map from '@/ui/map/Map';
@@ -5,6 +6,7 @@ import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
 import {bboxPolygon, point} from '@turf/turf';
+import clsx from 'clsx';
 
 const SVG_PADDING = 10;
 const POINT_RADIUS = 5;
@@ -75,11 +77,17 @@ export default function WarehouseMapSchema() {
   );
 }
 
+const conditionColor: Record<ZoneCondition, string> = {
+  normal: 'fill-blue-100',
+  cold: 'fill-slate-100',
+  dry: 'fill-red-100',
+};
+
 export function CellSvgRect(props: {cellId: string}) {
   const {placement, getProduct, getCell} = useWarehouseStore();
   const cell = getCell(props.cellId);
 
-  const productsInCell = placement?.[props.cellId]
+  const productsInCell = (placement?.[props.cellId] ?? [])
     .map(productId => getProduct(productId))
     .filter(product => product !== undefined);
 
@@ -93,7 +101,10 @@ export function CellSvgRect(props: {cellId: string}) {
     <>
       <PolygonFeature
         feature={bboxPolygon(cell.bounds)}
-        className="fill-blue-100 stroke-blue-500 stroke-2"
+        className={clsx(
+          'stroke-blue-500 stroke-2',
+          conditionColor[cell.zoneCondition]
+        )}
       />
       <Text
         feature={point([x0, y0])}
@@ -103,15 +114,18 @@ export function CellSvgRect(props: {cellId: string}) {
         {cell.name}
       </Text>
 
-      {productsInCell && productsInCell.length > 0 && (
-        <Text
-          feature={point([x0, y0 + PRODUCTS_MARGIN])}
-          className="fill-stone-600 text-[8px]"
-          dominantBaseline="hanging"
-        >
-          {productsInCell.map(p => p.name).join(', ')}
-        </Text>
-      )}
+      {productsInCell &&
+        productsInCell.length > 0 &&
+        productsInCell.map((p, i) => (
+          <Text
+            key={p.id}
+            feature={point([x0, y0 + PRODUCTS_MARGIN * (i + 1)])}
+            className="fill-stone-600 text-[8px]"
+            dominantBaseline="hanging"
+          >
+            {p.name}
+          </Text>
+        ))}
     </>
   );
 }

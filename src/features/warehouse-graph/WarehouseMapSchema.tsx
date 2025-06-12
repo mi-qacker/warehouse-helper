@@ -1,9 +1,16 @@
-import {createRectangleGrid, filterGridByCollisions} from '@/modules/graph';
+import {
+  createGraph,
+  createRectangleGrid,
+  filterGridByCollisions,
+} from '@/modules/graph';
 import {useWarehouseStore} from '@/storages/warehouse-storage';
+import LineFeature from '@/ui/map/LineFeature';
 import Map from '@/ui/map/Map';
+import PointFeature from '@/ui/map/PointFeature';
 import PolygonFeature from '@/ui/map/PolygonFeature';
 import Text from '@/ui/map/Text';
 import {bboxPolygon, point} from '@turf/turf';
+import {JSX, useMemo} from 'react';
 
 const SVG_PADDING = 10;
 
@@ -47,6 +54,12 @@ export function CellSvgRect(props: {cellId: string}) {
         feature={bboxPolygon(cell.bounds)}
       />
 
+      <PointFeature
+        radius={3}
+        feature={cell.loadingPoint}
+        className="fill-blue-600"
+      />
+
       <Text
         feature={point([x0, y0])}
         className="fill-stone-900 text-[8px] font-bold"
@@ -61,27 +74,71 @@ export function CellSvgRect(props: {cellId: string}) {
 function WarehouseGraphGrid() {
   const {graph, warehouse, cells} = useWarehouseStore();
 
-  if (!graph) return null;
-
-  const grid = createRectangleGrid(warehouse.bounds, {
-    width: graph.size,
-    height: graph.size,
-  });
-
-  const filteredGrid = filterGridByCollisions(
-    grid.features,
-    cells.map(cell => bboxPolygon(cell.bounds))
+  const grid = useMemo(
+    () =>
+      !graph
+        ? null
+        : createRectangleGrid(warehouse.bounds, {
+            width: graph.size,
+            height: graph.size,
+          }),
+    [graph, warehouse.bounds]
   );
+
+  const filteredGrid = useMemo(
+    () =>
+      !grid
+        ? null
+        : filterGridByCollisions(
+            grid.features,
+            cells.map(cell => bboxPolygon(cell.bounds))
+          ),
+    [cells, grid]
+  );
+
+  const ngraph = useMemo(
+    () =>
+      !filteredGrid
+        ? null
+        : createGraph(
+            filteredGrid,
+            [warehouse.inputPoint, warehouse.outputPoint],
+            cells.map(c => c.loadingPoint),
+            {maxDistance: graph?.size}
+          ),
+    [
+      cells,
+      filteredGrid,
+      graph?.size,
+      warehouse.inputPoint,
+      warehouse.outputPoint,
+    ]
+  );
+
+  const link = useMemo(() => {
+    const res: JSX.Element[] = [];
+    ngraph?.forEachLink(n => {
+      res.push(
+        <LineFeature
+          key={n.id}
+          className="fill-none stroke-red-500 stroke-1"
+          feature={n.data}
+        />
+      );
+    });
+    return res;
+  }, [ngraph]);
 
   return (
     <>
-      {filteredGrid.features.map((feature, i) => (
+      {filteredGrid?.features.map((feature, i) => (
         <PolygonFeature
           key={i}
           feature={feature}
           className="fill-none stroke-blue-400 stroke-1"
         />
       ))}
+      {link}
     </>
   );
 }

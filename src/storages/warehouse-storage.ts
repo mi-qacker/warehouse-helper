@@ -90,7 +90,6 @@ export const useWarehouseStore = create<WarehouseStore>()(
       },
 
       // Graph functions
-      graph: null,
       setGraph(graph) {
         set({graph});
       },
