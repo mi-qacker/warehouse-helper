@@ -1,8 +1,8 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
-import {DEMO_DATA, WAREHOUSE_INPUT_ID, WAREHOUSE_OUTPUT_ID} from './init-data';
-import {WarehouseStore} from './types';
 import {getUUID} from './common';
+import {DEMO_DATA, WAREHOUSE_INPUT_ID, WAREHOUSE_OUTPUT_ID} from './init-data';
+import {WarehouseDistanceMatrix, WarehouseStore} from './types';
 
 export const useWarehouseStore = create<WarehouseStore>()(
   persist(
@@ -65,6 +65,12 @@ export const useWarehouseStore = create<WarehouseStore>()(
       },
       getCell(id) {
         return get().cells.find(cell => cell.id === id);
+      },
+
+      // Distance matrix
+      distanceMatrix: null,
+      setDistanceMatrix(distanceMatrix: WarehouseDistanceMatrix) {
+        set({distanceMatrix});
       },
 
       // Placement functions

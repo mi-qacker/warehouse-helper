@@ -25,8 +25,15 @@ enum FETCH_STATUS {
 }
 
 export default function SolutionPage() {
-  const {products, cells, warehouse, graph, setPlacement, setRoute} =
-    useWarehouseStore();
+  const {
+    products,
+    cells,
+    warehouse,
+    graph,
+    setPlacement,
+    setRoute,
+    setDistanceMatrix,
+  } = useWarehouseStore();
 
   const [showProgress, setShowProgress] = useState(false);
   const [distanceMatrixStatus, setDistanceMatrixStatus] = useState(
@@ -49,6 +56,7 @@ export default function SolutionPage() {
       }
     ).then(res => res.json());
     setDistanceMatrixStatus(FETCH_STATUS.SUCCESS);
+    setDistanceMatrix(distanceMatrix);
 
     setPlacementStatus(FETCH_STATUS.PROGRESS);
     setShowProgress(true);
