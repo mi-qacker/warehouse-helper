@@ -90,7 +90,15 @@ export default function SolutionPage() {
     }).then(res => res.json());
     setRouteStatus(FETCH_STATUS.SUCCESS);
     setRoute(generic.route, generic.lineFeature, generic.distance);
-  }, [cells, graph, products, setPlacement, setRoute, warehouse]);
+  }, [
+    cells,
+    graph,
+    products,
+    setDistanceMatrix,
+    setPlacement,
+    setRoute,
+    warehouse,
+  ]);
 
   return (
     <main className="container mx-auto">

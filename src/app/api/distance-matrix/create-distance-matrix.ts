@@ -1,10 +1,9 @@
-import {Graph} from 'ngraph.graph';
-import {Feature, Point, LineString} from 'geojson';
-import {Warehouse, Cell} from '@/storages/types';
-import {DistanceMatrix, DistanceBody} from '.';
-import {findPath} from '@/modules/graph';
-import {lineString, point} from '@turf/turf';
 import {getDistancePoints} from '@/modules/common';
+import {findPath} from '@/modules/graph';
+import {Cell, DistanceBody, DistanceMatrix, Warehouse} from '@/storages/types';
+import {lineString, point} from '@turf/turf';
+import {Feature, LineString, Point} from 'geojson';
+import {Graph} from 'ngraph.graph';
 
 export function createPointDistanceMatrix(
   nrgaph: Graph<Feature<Point>, Feature<LineString>>,

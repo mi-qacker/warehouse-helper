@@ -1,7 +1,8 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
 import {getUUID} from './common';
-import {DEMO_DATA, WAREHOUSE_INPUT_ID, WAREHOUSE_OUTPUT_ID} from './init-data';
+import {DEMO_DATA} from './init-data';
+import {WAREHOUSE_INPUT_ID, WAREHOUSE_OUTPUT_ID} from './templates/common';
 import {WarehouseDistanceMatrix, WarehouseStore} from './types';
 
 export const useWarehouseStore = create<WarehouseStore>()(

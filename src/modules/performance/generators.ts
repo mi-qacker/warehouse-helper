@@ -1,4 +1,7 @@
-import {WAREHOUSE_INPUT_ID, WAREHOUSE_OUTPUT_ID} from '@/storages/init-data';
+import {
+  WAREHOUSE_INPUT_ID,
+  WAREHOUSE_OUTPUT_ID,
+} from '@/storages/templates/common';
 import {ZoneCondition, Cell, Warehouse, Product} from '@/storages/types';
 import {point} from '@turf/turf';
 import {BBox} from 'geojson';
