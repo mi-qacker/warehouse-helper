@@ -34,7 +34,7 @@
     "zustand": "^5.0.5"
   },
   "devDependencies": {
-    "@diplodoc/cli": "^4.59.11",
+    "@diplodoc/cli": "^5.0.8",
     "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.53.1",
     "@tailwindcss/postcss": "^4.1.10",
