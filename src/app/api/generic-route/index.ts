@@ -1,4 +1,4 @@
-import {DistanceMatrix} from '@/app/api/distance-matrix';
+import {DistanceMatrix} from '@/storages/types';
 import {Cell, Route} from '@/storages/types';
 import {Feature, FeatureCollection, LineString, Point} from 'geojson';
 

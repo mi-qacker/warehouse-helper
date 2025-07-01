@@ -2,7 +2,7 @@ import {solveOptimizationRoute} from '@/modules/genetic-algorithm';
 import {feature, featureCollection} from '@turf/turf';
 import {Feature, LineString, Point} from 'geojson';
 import {ApiRequest, ApiResponse} from '.';
-import {DistanceMatrix} from '../distance-matrix';
+import {DistanceMatrix} from '@/storages/types';
 
 export async function POST(request: Request) {
   const {cells, inputPoint, outputPoint, distanceMatrix}: ApiRequest =
