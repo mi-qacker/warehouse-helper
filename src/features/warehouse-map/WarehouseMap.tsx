@@ -6,8 +6,19 @@ import {useShallow} from 'zustand/shallow';
 import {CellGridCard} from './CellGridCard';
 import {ProductGridCard} from './ProductGridCard';
 import WarehouseMapSchema from './WarehouseMapSchema';
+import {useSearchParams} from 'next/navigation';
+
+export type MapModules = 'matrix' | 'route' | 'placement';
 
 export default function WarehouseMap() {
+  const searchParams = useSearchParams();
+  const showModules: MapModules[] = useMemo(() => {
+    const rawShow = searchParams.get('show');
+    return !rawShow
+      ? ['route', 'placement'] // default
+      : (rawShow.split(',') as MapModules[]);
+  }, [searchParams]);
+
   const {products, cells} = useWarehouseStore(
     useShallow(({products, cells}) => ({products, cells}))
   );
@@ -40,7 +51,7 @@ export default function WarehouseMap() {
       </div>
       <div>
         <h2 className="mb-2 text-xl font-bold">Schema</h2>
-        <WarehouseMapSchema />
+        <WarehouseMapSchema showModules={showModules} />
       </div>
     </div>
   );

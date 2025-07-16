@@ -39,6 +39,21 @@ export type Placement = {
 };
 export type Route = Cell[];
 export type Graph = {size: number};
+
+export type ApiResponse = {
+  distanceMatrixCells: DistanceMatrix;
+  distanceMatrixPoints: DistanceMatrix;
+};
+export type DistanceMatrix = Record<`${string}-${string}`, DistanceBody>;
+export type DistanceBody = {
+  distance: number;
+  path: Feature<LineString> | Feature<Point>;
+};
+export type WarehouseDistanceMatrix = {
+  distanceMatrixCells: DistanceMatrix;
+  distanceMatrixPoints: DistanceMatrix;
+};
+
 export type WarehouseStore = {
   warehouse: Warehouse;
   setWarehouse: (warehouse: Warehouse) => void;
@@ -54,6 +69,9 @@ export type WarehouseStore = {
   updateCell: (id: string, cell: NewCell) => void;
   removeCell: (id: string) => void;
   getCell: (id: string) => Cell | undefined;
+
+  distanceMatrix: WarehouseDistanceMatrix | null;
+  setDistanceMatrix(distanceMatrix: WarehouseDistanceMatrix): void;
 
   placement: Placement | null;
   setPlacement: (placement: Placement) => void;

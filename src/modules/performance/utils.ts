@@ -1,4 +1,4 @@
-import type {DistanceMatrix} from '@/app/api/distance-matrix';
+import type {DistanceMatrix} from '@/storages/types';
 import {
   createCellsDistanceMatrix,
   createPointDistanceMatrix,

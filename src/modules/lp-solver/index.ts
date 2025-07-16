@@ -1,7 +1,7 @@
 import {Cell, Placement, Product} from '@/storages/types';
 import {Feature, Point} from 'geojson';
 import type {GLPK, LP} from 'glpk.js';
-import {DistanceMatrix} from '@/app/api/distance-matrix';
+import {DistanceMatrix} from '@/storages/types';
 
 let glpk: GLPK;
 
