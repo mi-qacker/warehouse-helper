@@ -1,4 +1,6 @@
-# Warehouse Helper App
+# Warehouse Helper App [ARCHIVED]
+
+> This work has been completed. No further development is expected.
 
 ## About
 
